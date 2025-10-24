@@ -250,6 +250,7 @@ func process_in_air(delta: float):
 			fall_accelerate(-1, delta)
 		elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
 			fall_accelerate(1, delta)
+		sprite_face(sign(velocity.x))
 
 	apply_gravity(delta)
 
