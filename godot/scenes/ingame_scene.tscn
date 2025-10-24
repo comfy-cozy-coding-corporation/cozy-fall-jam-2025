@@ -1,13 +1,31 @@
-[gd_scene load_steps=5 format=3 uid="uid://cik30de5gaaah"]
+[gd_scene load_steps=8 format=3 uid="uid://cik30de5gaaah"]
 
 [ext_resource type="Script" uid="uid://ovjegpk30m4h" path="res://scenes/ingame_scene.gd" id="1_objyc"]
 [ext_resource type="PackedScene" uid="uid://bkk87o2ooo6at" path="res://ui/overlays/fade_overlay.tscn" id="1_y6ebv"]
 [ext_resource type="PackedScene" uid="uid://jyv4g54adkmo" path="res://ui/overlays/pause_overlay.tscn" id="3_8o178"]
 [ext_resource type="PackedScene" uid="uid://bum8grp8k142r" path="res://scenes/player/player.tscn" id="4_7v5ay"]
+[ext_resource type="Texture2D" uid="uid://ypb5vlxu6sj7" path="res://assets/background_placeholder.png" id="6_gadrd"]
+[ext_resource type="Script" uid="uid://dpcxbaxymuk5c" path="res://scenes/environment/environment_manager.gd" id="7_5jhce"]
+[ext_resource type="PackedScene" uid="uid://cwjf8k7g6u00e" path="res://scenes/environment/bush_scene.tscn" id="8_vus8m"]
 
 [node name="IngameScene" type="Node2D"]
 position = Vector2(271, 146)
 script = ExtResource("1_objyc")
+
+[node name="BackgroundPlaceholder" type="Sprite2D" parent="."]
+position = Vector2(254.95163, 162)
+scale = Vector2(0.13064511, 0.13064516)
+texture = ExtResource("6_gadrd")
+
+[node name="NodeExample" type="Sprite2D" parent="." groups=["Persist"]]
+position = Vector2(288, 220)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_h1yxu")
+script = ExtResource("3_a5686")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2(0, -289.99994)
+scale = Vector2(0.99999994, 0.99999994)
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -21,3 +39,7 @@ process_mode = 2
 visible = false
 
 [node name="Player" parent="." instance=ExtResource("4_7v5ay")]
+
+[node name="EnvironmentManager" type="Node2D" parent="."]
+script = ExtResource("7_5jhce")
+bush_scene = ExtResource("8_vus8m")
