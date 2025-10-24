@@ -2,7 +2,8 @@ extends CharacterBody2D
 
 const MAX_RUNNING_SPEED = 200
 const MAX_GLIDING_SPEED = 400
-const RUNNING_ACCELERATION = 500
+const RUNNING_FORWARD_ACCELERATION = 500
+const RUNNING_BACKWARD_ACCELERATION = 1800
 const RUNNING_DECELERATION = 1500
 const GLIDING_FORWARD_ACCELERATION = 300
 const GLIDING_BACKWARD_ACCELERATION = 900
@@ -115,9 +116,9 @@ func run_accelerate(direction, delta: float):
 
 	var delta_vel
 	if sign(velocity.x) == direction:
-		delta_vel = delta * direction * RUNNING_ACCELERATION
+		delta_vel = delta * direction * RUNNING_FORWARD_ACCELERATION
 	else:
-		delta_vel = delta * direction * RUNNING_DECELERATION
+		delta_vel = delta * direction * RUNNING_BACKWARD_ACCELERATION
 
 	if velocity.x * direction > MAX_RUNNING_SPEED:
 		return
