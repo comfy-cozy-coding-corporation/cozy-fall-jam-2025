@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+const GLIDES_PER_JUMP = 1
 const MAX_RUNNING_SPEED = 200
 const MAX_GLIDING_SPEED = 400
 const RUNNING_FORWARD_ACCELERATION = 500
@@ -133,6 +134,7 @@ func run_decelerate(delta: float):
 
 
 var jump_window_counter: int = 0
+var glides_available = 0
 
 
 func jump():
@@ -140,14 +142,16 @@ func jump():
 	jump_window_counter += 1
 	jump_input_window.start()
 
+	glides_available = GLIDES_PER_JUMP
+
 	velocity.y -= JUMP_VELOCITY
 
 	if Input.is_action_pressed("move_left") && !Input.is_action_pressed("move_right"):
 		sprite_face(-1)
-		velocity.x = -abs(velocity.x)
+		velocity.x = -max(abs(velocity.x), MAX_RUNNING_SPEED)
 	elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
 		sprite_face(1)
-		velocity.x = abs(velocity.x)
+		velocity.x = max(abs(velocity.x), MAX_RUNNING_SPEED)
 	else:
 		velocity.x = 0
 
@@ -225,7 +229,10 @@ func process_in_air(delta: float):
 	
 	if Input.is_action_just_pressed("jump"):
 		match state:
-			State.FALLING, State.RISING: change_state(State.GLIDING)
+			State.FALLING, State.RISING:
+				if glides_available > 0:
+					change_state(State.GLIDING)
+					glides_available -= 1
 			State.GLIDING: flap()
 
 	if state == State.GLIDING:
