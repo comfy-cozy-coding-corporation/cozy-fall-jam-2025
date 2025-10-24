@@ -9,7 +9,7 @@ extends Node2D
 # Defines the valid positions for a bush to spawn
 # bush_pos_area[0] represents the min. x & y coordinates
 # bush_pos_area[1] represents the max. x & y coordinates
-@export var bush_pos_area: PackedVector2Array = [Vector2(-200, 200), Vector2(700, 250)]
+@export var bush_pos_area: PackedVector2Array = [Vector2(-450, -32), Vector2(450, 10)]
 
 func _ready() -> void:
 	var amount_bushes = randi_range(min_bushes, max_bushes)
@@ -21,5 +21,5 @@ func _ready() -> void:
 		)
 		var bush_instance: Node2D = bush_scene.instantiate()
 		self.add_child(bush_instance)
-		bush_instance.global_position = new_bush_pos
+		bush_instance.position = new_bush_pos
 	

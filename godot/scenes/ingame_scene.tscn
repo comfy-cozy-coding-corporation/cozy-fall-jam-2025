@@ -9,23 +9,13 @@
 [ext_resource type="PackedScene" uid="uid://cwjf8k7g6u00e" path="res://scenes/environment/bush_scene.tscn" id="8_vus8m"]
 
 [node name="IngameScene" type="Node2D"]
-position = Vector2(271, 146)
 script = ExtResource("1_objyc")
 
 [node name="BackgroundPlaceholder" type="Sprite2D" parent="."]
-position = Vector2(254.95163, 162)
+texture_filter = 2
+position = Vector2(0, -75)
 scale = Vector2(0.13064511, 0.13064516)
 texture = ExtResource("6_gadrd")
-
-[node name="NodeExample" type="Sprite2D" parent="." groups=["Persist"]]
-position = Vector2(288, 220)
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("2_h1yxu")
-script = ExtResource("3_a5686")
-
-[node name="Camera2D" type="Camera2D" parent="Player"]
-position = Vector2(0, -289.99994)
-scale = Vector2(0.99999994, 0.99999994)
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -39,6 +29,10 @@ process_mode = 2
 visible = false
 
 [node name="Player" parent="." instance=ExtResource("4_7v5ay")]
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2(0, -32)
+scale = Vector2(0.99999994, 0.99999994)
 
 [node name="EnvironmentManager" type="Node2D" parent="."]
 script = ExtResource("7_5jhce")
