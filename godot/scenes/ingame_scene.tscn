@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cik30de5gaaah"]
+[gd_scene load_steps=9 format=3 uid="uid://cik30de5gaaah"]
 
 [ext_resource type="Script" uid="uid://ovjegpk30m4h" path="res://scenes/ingame_scene.gd" id="1_objyc"]
 [ext_resource type="PackedScene" uid="uid://bkk87o2ooo6at" path="res://ui/overlays/fade_overlay.tscn" id="1_y6ebv"]
@@ -7,6 +7,9 @@
 [ext_resource type="Texture2D" uid="uid://ypb5vlxu6sj7" path="res://assets/background_placeholder.png" id="6_gadrd"]
 [ext_resource type="Script" uid="uid://dpcxbaxymuk5c" path="res://scenes/environment/environment_manager.gd" id="7_5jhce"]
 [ext_resource type="PackedScene" uid="uid://cwjf8k7g6u00e" path="res://scenes/environment/bush_scene.tscn" id="8_vus8m"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5jhce"]
+size = Vector2(915, 86)
 
 [node name="IngameScene" type="Node2D"]
 script = ExtResource("1_objyc")
@@ -37,3 +40,9 @@ scale = Vector2(0.99999994, 0.99999994)
 [node name="EnvironmentManager" type="Node2D" parent="."]
 script = ExtResource("7_5jhce")
 bush_scene = ExtResource("8_vus8m")
+
+[node name="Ground" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+position = Vector2(0, 43)
+shape = SubResource("RectangleShape2D_5jhce")
