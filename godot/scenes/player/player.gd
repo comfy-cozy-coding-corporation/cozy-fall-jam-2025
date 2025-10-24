@@ -112,6 +112,16 @@ func jump():
 	jump_input_window.start()
 	velocity.y -= JUMP_VELOCITY
 
+	if Input.is_action_pressed("move_left") && !Input.is_action_pressed("move_right"):
+		sprite_face(-1)
+		velocity.x = -abs(velocity.x)
+	elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
+		sprite_face(1)
+		velocity.x = abs(velocity.x)
+	else:
+		velocity.x = 0
+
+
 func process_on_ground(delta: float):
 	if !is_on_floor():
 		change_state(State.FALLING)
