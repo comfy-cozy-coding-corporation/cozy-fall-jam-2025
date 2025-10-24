@@ -3,7 +3,9 @@ extends CharacterBody2D
 const TOP_SPEED = 200
 const ACCELERATION = 500
 const DECELERATION = 1500
-const JUMP_SPEED = 200
+const JUMP_VELOCITY = 120
+const JUMP_MAX_HOLD_TIME = 0.5
+const JUMPING_GRAVITY_ACC = 100
 const FALLING_GRAVITY_ACC = 500
 
 const MIN_RUNNING_ANIM_SPEED = 0.5
@@ -12,6 +14,7 @@ enum State {
 	STANDING,
 	RUNNING,
 	JUMPING,
+	RISING,
 	FALLING
 }
 
@@ -20,19 +23,21 @@ enum PlayerAnimation {
 	STANDING,
 	RUNNING,
 	JUMPING,
-	JUMP_INTO_FALLING,
+	RISE_INTO_FALLING,
 	STAND_INTO_FALLING,
 }
 
 var state = State.STANDING
 
 @onready var sprite: AnimatedSprite2D = self.find_child("PlayerSprite")
+@onready var jump_input_window: Timer = self.find_child("JumpInputWindow")
 
 var animation_queue = []
 
 func play_next_animation():
 	var next_anim = animation_queue.pop_front()
-	sprite.play(next_anim)
+	if next_anim != null:
+		sprite.play(next_anim)
 
 func play(anim: PlayerAnimation):
 	animation_queue.clear()
@@ -46,7 +51,7 @@ func play(anim: PlayerAnimation):
 			sprite.play("running")
 		PlayerAnimation.JUMPING:
 			sprite.play("jumping")
-		PlayerAnimation.JUMP_INTO_FALLING:
+		PlayerAnimation.RISE_INTO_FALLING:
 			sprite.play("jump_to_fall")
 			animation_queue.push_back("falling")
 		PlayerAnimation.STAND_INTO_FALLING:
@@ -56,9 +61,10 @@ func play(anim: PlayerAnimation):
 func change_state(new_state):
 	if new_state == state: return
 	sprite.speed_scale = 1
+
 	match new_state:
 		State.STANDING:
-			if state == State.FALLING or state == State.JUMPING:
+			if state == State.FALLING || state == State.RISING || state == State.JUMPING:
 				play(PlayerAnimation.LAND_INTO_STANDING)
 			else:
 				play(PlayerAnimation.STANDING)
@@ -67,8 +73,8 @@ func change_state(new_state):
 		State.JUMPING:
 			play(PlayerAnimation.JUMPING)
 		State.FALLING:
-			if state == State.JUMPING:
-				play(PlayerAnimation.JUMP_INTO_FALLING)
+			if state == State.JUMPING || state == State.RISING:
+				play(PlayerAnimation.RISE_INTO_FALLING)
 			else:
 				play(PlayerAnimation.STAND_INTO_FALLING)
 	state = new_state
@@ -102,7 +108,9 @@ func run_decelerate(delta: float):
 	sprite_set_running_speed(abs(velocity.x))
 
 func jump():
-	velocity.y -= JUMP_SPEED
+	change_state(State.JUMPING)
+	jump_input_window.start()
+	velocity.y -= JUMP_VELOCITY
 
 func process_on_ground(delta: float):
 	if !is_on_floor():
@@ -124,24 +132,32 @@ func process_on_ground(delta: float):
 	
 
 func process_in_air(delta: float):
+	if state == State.JUMPING && !Input.is_action_pressed("jump"):
+		change_state(State.RISING)
+
+	if state == State.RISING && sign(velocity.y) != -1:
+		change_state(State.FALLING)
+	
 	if state == State.FALLING && is_on_floor():
 		change_state(State.STANDING)
 		return
 	
-	if state == State.JUMPING && sign(velocity.y) != 1:
-		change_state(State.FALLING)
-
-	velocity.y += FALLING_GRAVITY_ACC * delta
+	if state == State.JUMPING:
+		velocity.y += JUMPING_GRAVITY_ACC * delta
+	else:
+		velocity.y += FALLING_GRAVITY_ACC * delta
 
 func _physics_process(delta: float) -> void:
-	print(state)
 	match state:
 		State.STANDING, State.RUNNING:
 			process_on_ground(delta)
-		State.JUMPING, State.FALLING:
+		State.JUMPING, State.RISING, State.FALLING:
 			process_in_air(delta)
 	move_and_slide()
 
 
 func _ready() -> void:
 	sprite.animation_finished.connect(play_next_animation)
+	jump_input_window.wait_time = JUMP_MAX_HOLD_TIME
+	jump_input_window.one_shot = true
+	jump_input_window.timeout.connect(change_state.bind(State.RISING))
