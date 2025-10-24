@@ -2,15 +2,17 @@ extends CharacterBody2D
 
 const GLIDES_PER_JUMP = 1
 const MAX_RUNNING_SPEED = 200
-const MAX_GLIDING_SPEED = 400
+const MAX_FALL_CONTROL_SPEED = 100
+const MAX_GLIDING_SPEED = 300
 const RUNNING_FORWARD_ACCELERATION = 500
 const RUNNING_BACKWARD_ACCELERATION = 1800
 const RUNNING_DECELERATION = 1500
+const FALLING_ACCELERATION = 500
 const GLIDING_FORWARD_ACCELERATION = 300
 const GLIDING_BACKWARD_ACCELERATION = 900
 const JUMP_VELOCITY = 120
 const JUMP_MAX_HOLD_TIME = 0.5
-const FLAP_VELOCITY = 250
+const FLAP_VELOCITY = 280
 const FLAP_FORWARD_VELOCITY = 100
 const JUMPING_GRAVITY = 100
 const FALLING_GRAVITY = 500
@@ -189,7 +191,8 @@ func apply_air_resistance(delta):
 
 
 func flap():
-	velocity.y -= FLAP_VELOCITY
+	if velocity.y > -FLAP_VELOCITY:
+		velocity.y = max(velocity.y, 0) - FLAP_VELOCITY
 
 	if Input.is_action_pressed("move_left") && !Input.is_action_pressed("move_right"):
 		sprite_face(-1)
@@ -216,6 +219,11 @@ func glide_accelerate(delta: float):
 	elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
 		sprite_face(1)
 
+func fall_accelerate(direction: float, delta: float):
+	var delta_vel = delta * direction * FALLING_ACCELERATION
+	velocity.x = min(MAX_RUNNING_SPEED, direction * (velocity.x + delta_vel)) * direction
+
+
 func process_in_air(delta: float):
 	if state == State.JUMPING && (jump_window_counter == 0 || !Input.is_action_pressed("jump")):
 		change_state(State.RISING)
@@ -237,6 +245,11 @@ func process_in_air(delta: float):
 
 	if state == State.GLIDING:
 		glide_accelerate(delta)
+	elif state == State.RISING || state == State.FALLING:
+		if Input.is_action_pressed("move_left") && !Input.is_action_pressed("move_right"):
+			fall_accelerate(-1, delta)
+		elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
+			fall_accelerate(1, delta)
 
 	apply_gravity(delta)
 
