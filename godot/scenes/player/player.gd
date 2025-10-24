@@ -1,15 +1,15 @@
 extends CharacterBody2D
 
-const TOP_SPEED = 200
-const ACCELERATION = 500
-const DECELERATION = 1500
+const MAX_RUNNING_SPEED = 200
+const RUNNING_ACCELERATION = 500
+const RUNNING_DECELERATION = 1500
+const GLIDING_ACCELERATION = 200
 const JUMP_VELOCITY = 120
 const JUMP_MAX_HOLD_TIME = 0.5
-const JUMPING_GRAVITY_ACC = 100
-const FALLING_GRAVITY_ACC = 500
-const GLIDING_GRAVITY_ACC = 200
+const JUMPING_GRAVITY = 100
+const FALLING_GRAVITY = 500
+const GLIDING_GRAVITY = 200
 const GLIDING_AIR_RESISTANCE = 2.0
-const GLIDING_FORWARD_ACC = 200
 
 const MIN_RUNNING_ANIM_SPEED = 0.5
 
@@ -97,7 +97,7 @@ func sprite_face(direction):
 
 func sprite_set_running_speed(speed):
 	if state != State.RUNNING: return
-	sprite.speed_scale = (speed / TOP_SPEED) * (1 - MIN_RUNNING_ANIM_SPEED) + MIN_RUNNING_ANIM_SPEED
+	sprite.speed_scale = (speed / MAX_RUNNING_SPEED) * (1 - MIN_RUNNING_ANIM_SPEED) + MIN_RUNNING_ANIM_SPEED
 
 
 func run_accelerate(direction, delta: float):
@@ -105,18 +105,18 @@ func run_accelerate(direction, delta: float):
 
 	var delta_vel
 	if sign(velocity.x) == direction:
-		delta_vel = delta * direction * ACCELERATION
+		delta_vel = delta * direction * RUNNING_ACCELERATION
 	else:
-		delta_vel = delta * direction * DECELERATION
+		delta_vel = delta * direction * RUNNING_DECELERATION
 
-	if velocity.x * direction > TOP_SPEED:
+	if velocity.x * direction > MAX_RUNNING_SPEED:
 		return
 
-	velocity.x = min(TOP_SPEED, direction * (velocity.x + delta_vel)) * direction
+	velocity.x = min(MAX_RUNNING_SPEED, direction * (velocity.x + delta_vel)) * direction
 	sprite_set_running_speed(abs(velocity.x))
 
 func run_decelerate(delta: float):
-	var delta_vel = delta * DECELERATION
+	var delta_vel = delta * RUNNING_DECELERATION
 	velocity.x = max(0, abs(velocity.x) - delta_vel) * sign(velocity.x)
 	sprite_set_running_speed(abs(velocity.x))
 
@@ -160,11 +160,11 @@ func process_on_ground(delta: float):
 
 func apply_gravity(delta):
 	if state == State.JUMPING:
-		velocity.y += JUMPING_GRAVITY_ACC * delta
+		velocity.y += JUMPING_GRAVITY * delta
 	elif state == State.GLIDING:
-		velocity.y += GLIDING_GRAVITY_ACC * delta
+		velocity.y += GLIDING_GRAVITY * delta
 	else:
-		velocity.y += FALLING_GRAVITY_ACC * delta
+		velocity.y += FALLING_GRAVITY * delta
 
 func apply_air_resistance(delta):
 	if sign(velocity.y) <= 0:
@@ -189,7 +189,7 @@ func process_in_air(delta: float):
 			State.GLIDING: change_state(State.FALLING)
 
 	if state == State.GLIDING:
-		velocity.x += facing_dir * GLIDING_FORWARD_ACC * delta
+		velocity.x += facing_dir * GLIDING_ACCELERATION * delta
 		if Input.is_action_pressed("move_left") && !Input.is_action_pressed("move_right"):
 			sprite_face(-1)
 		elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
