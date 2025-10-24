@@ -21,12 +21,12 @@ UserSettings="*res://settings/user_settings.gd"
 
 [display]
 
-window/size/viewport_width=576
-window/size/viewport_height=324
+window/size/mode=3
 window/size/window_width_override=1920
 window/size/window_height_override=1080
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep_height"
+window/stretch/scale=3.0
 
 [gui]
 
