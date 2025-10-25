@@ -28,7 +28,7 @@ extends CharacterBody2D
 @export var gliding_turnaround_acceleration: float = 900
 
 @export_subgroup("Flapping")
-@export var flap_velocity: float = 280
+@export var flap_velocity: float = 300
 @export var flap_forward_velocity: float = 100
 
 @export_subgroup("Climbing")
@@ -255,6 +255,12 @@ func _apply_air_resistance(delta: float):
 		return
 	velocity.y *= (1 - clamp(gliding_air_resistance * delta, 0, 1))
 
+func _flap():
+		_jump(flap_velocity, flap_forward_velocity)
+		# reset speed
+		velocity.x = sign(velocity.x) * min(abs(velocity.x), flap_forward_velocity)
+		play(PlayerAnimation.FLAP)
+		change_state(State.RISING)
 
 func _process_in_air(delta: float):
 	if state == State.JUMPING && (jump_window_counter == 0 || !Input.is_action_pressed("jump")):
@@ -274,9 +280,8 @@ func _process_in_air(delta: float):
 					change_state(State.GLIDING)
 					glides_available -= 1
 			State.GLIDING:
-				_jump(flap_velocity, flap_forward_velocity)
-				play(PlayerAnimation.FLAP)
-				change_state(State.RISING)
+				_flap()
+				return
 
 	var dir = _input_direction_h()
 
