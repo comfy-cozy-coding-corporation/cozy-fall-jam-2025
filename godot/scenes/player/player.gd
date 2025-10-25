@@ -445,9 +445,9 @@ func _ready() -> void:
 	jump_input_window.one_shot = true
 
 
-func _on_hiding_area_area_entered() -> void:
+func _on_hiding_area_area_entered(_area: Area2D) -> void:
 	hiding = true
 
 
-func _on_hiding_area_area_exited() -> void:
+func _on_hiding_area_area_exited(_area: Area2D) -> void:
 	hiding = false
