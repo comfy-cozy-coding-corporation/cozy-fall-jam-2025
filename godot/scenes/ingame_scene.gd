@@ -5,6 +5,14 @@ extends Node2D
 
 func _ready() -> void:
 	fade_overlay.visible = true
+	self.process_mode = Node.PROCESS_MODE_ALWAYS
+
+func _process(_delta: float) -> void:
+	if pause_overlay.visible:
+		print("test")
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 
 func _input(event) -> void:
 	if event.is_action_pressed("pause") and not pause_overlay.visible:

@@ -12,6 +12,7 @@ var next_scene = game_scene
 var new_game = true
 
 func _ready() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	overlay.visible = true
 	new_game_button.disabled = game_scene == null
 	settings_button.disabled = settings_scene == null
