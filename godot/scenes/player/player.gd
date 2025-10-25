@@ -104,7 +104,7 @@ func play(anim: PlayerAnimation):
 			sprite.rotation = PI / 2
 			sprite.play("climbing")
 
-func change_state(new_state):
+func change_state(new_state: State):
 	if new_state == state: return
 	sprite.speed_scale = 1
 
@@ -227,7 +227,7 @@ func _process_on_ground(delta: float):
 			_decelerate(delta, running_deceleration)
 
 
-func _apply_gravity(delta):
+func _apply_gravity(delta: float):
 	if state == State.JUMPING:
 		velocity.y += jumping_gravity * delta
 	elif state == State.GLIDING:
@@ -235,27 +235,10 @@ func _apply_gravity(delta):
 	else:
 		velocity.y += falling_gravity * delta
 
-func _apply_air_resistance(delta):
+func _apply_air_resistance(delta: float):
 	if sign(velocity.y) <= 0:
 		return
 	velocity.y *= (1 - clamp(gliding_air_resistance * delta, 0, 1))
-
-func _glide_accelerate(delta: float):
-	var delta_vel
-	if sign(velocity.x) == facing_dir:
-		delta_vel = gliding_acceleration * delta * facing_dir
-	else:
-		delta_vel = gliding_turnaround_acceleration * delta * facing_dir
-
-	velocity.x = min(max_gliding_speed, facing_dir * (velocity.x + delta_vel)) * facing_dir
-	if Input.is_action_pressed("move_left") && !Input.is_action_pressed("move_right"):
-		_sprite_face(-1)
-	elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
-		_sprite_face(1)
-
-func _fall_accelerate(direction: float, delta: float):
-	var delta_vel = delta * direction * air_control_accceleration
-	velocity.x = min(max_running_speed, direction * (velocity.x + delta_vel)) * direction
 
 
 func _process_in_air(delta: float):
