@@ -1,0 +1,187 @@
+[gd_resource type="BehaviorTree" load_steps=53 format=3 uid="uid://csl3srkx36g8j"]
+
+[ext_resource type="Script" uid="uid://estam0hqswbd" path="res://ai/tasks/can_see_player.gd" id="1_4u2yy"]
+[ext_resource type="Script" uid="uid://bkekkv47fvwtm" path="res://ai/tasks/set_enemy_anger.gd" id="1_bjilo"]
+[ext_resource type="Script" uid="uid://mt8yeaq05xai" path="res://ai/tasks/face_detected_player.gd" id="2_bjilo"]
+[ext_resource type="Script" uid="uid://dkvswv00jikl3" path="res://ai/tasks/walk.gd" id="3_kjkg0"]
+[ext_resource type="Script" uid="uid://cgg43hp6sdkjg" path="res://ai/tasks/stop.gd" id="4_23i14"]
+[ext_resource type="Script" uid="uid://dvqdspjyvkrhk" path="res://ai/tasks/turn.gd" id="5_upcww"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_73enu"]
+var/detection_var/name = &"detection_var"
+var/detection_var/type = 3
+var/detection_var/value = 0.0
+var/detection_var/hint = 0
+var/detection_var/hint_string = ""
+
+[sub_resource type="BTAction" id="BTAction_kjkg0"]
+script = ExtResource("1_bjilo")
+
+[sub_resource type="BBVariant" id="BBVariant_kjkg0"]
+type = 3
+saved_value = 50.0
+resource_name = "50.0"
+
+[sub_resource type="BTCheckVar" id="BTCheckVar_23i14"]
+variable = &"detection_var"
+check_type = 4
+value = SubResource("BBVariant_kjkg0")
+
+[sub_resource type="BTAction" id="BTAction_23i14"]
+script = ExtResource("1_bjilo")
+state = 1
+
+[sub_resource type="BTAction" id="BTAction_upcww"]
+script = ExtResource("2_bjilo")
+
+[sub_resource type="BTAction" id="BTAction_bjilo"]
+script = ExtResource("4_23i14")
+
+[sub_resource type="BBVariant" id="BBVariant_0apxy"]
+type = 3
+saved_value = 100.0
+resource_name = "100.0"
+
+[sub_resource type="BTCheckVar" id="BTCheckVar_tw3xv"]
+variable = &"detection_var"
+check_type = 4
+value = SubResource("BBVariant_0apxy")
+
+[sub_resource type="BTAction" id="BTAction_fqd8v"]
+script = ExtResource("1_bjilo")
+state = 2
+
+[sub_resource type="BTCondition" id="BTCondition_tboc4"]
+script = ExtResource("1_4u2yy")
+
+[sub_resource type="BTAction" id="BTAction_tw3xv"]
+script = ExtResource("2_bjilo")
+
+[sub_resource type="BTAction" id="BTAction_n4qy4"]
+script = ExtResource("3_kjkg0")
+speed = 100.0
+
+[sub_resource type="BTSequence" id="BTSequence_nh2d4"]
+children = [SubResource("BTCondition_tboc4"), SubResource("BTAction_tw3xv"), SubResource("BTAction_n4qy4")]
+
+[sub_resource type="BTRepeatUntilFailure" id="BTRepeatUntilFailure_0apxy"]
+children = [SubResource("BTSequence_nh2d4")]
+
+[sub_resource type="BTInvert" id="BTInvert_4u2yy"]
+children = [SubResource("BTRepeatUntilFailure_0apxy")]
+
+[sub_resource type="BTSequence" id="BTSequence_73enu"]
+custom_name = "Chasing"
+children = [SubResource("BTAction_kjkg0"), SubResource("BTCheckVar_23i14"), SubResource("BTAction_23i14"), SubResource("BTAction_upcww"), SubResource("BTAction_bjilo"), SubResource("BTCheckVar_tw3xv"), SubResource("BTAction_fqd8v"), SubResource("BTInvert_4u2yy")]
+
+[sub_resource type="BTCondition" id="BTCondition_fqd8v"]
+script = ExtResource("1_4u2yy")
+
+[sub_resource type="BTWait" id="BTWait_n6ogd"]
+duration = 0.5
+
+[sub_resource type="BBVariant" id="BBVariant_eyybb"]
+type = 3
+saved_value = 100.0
+resource_name = "100.0"
+
+[sub_resource type="BTCheckVar" id="BTCheckVar_pvrqt"]
+variable = &"detection_var"
+check_type = 1
+value = SubResource("BBVariant_eyybb")
+
+[sub_resource type="BBVariant" id="BBVariant_upx3q"]
+type = 3
+saved_value = 10.0
+resource_name = "10.0"
+
+[sub_resource type="BTSetVar" id="BTSetVar_8b6tu"]
+variable = &"detection_var"
+value = SubResource("BBVariant_upx3q")
+operation = 1
+
+[sub_resource type="BTSequence" id="BTSequence_dhgfn"]
+custom_name = "Detecting"
+children = [SubResource("BTCondition_fqd8v"), SubResource("BTWait_n6ogd"), SubResource("BTCheckVar_pvrqt"), SubResource("BTSetVar_8b6tu")]
+
+[sub_resource type="BTCondition" id="BTCondition_4u2yy"]
+script = ExtResource("1_4u2yy")
+
+[sub_resource type="BTInvert" id="BTInvert_bjilo"]
+children = [SubResource("BTCondition_4u2yy")]
+
+[sub_resource type="BBVariant" id="BBVariant_4u2yy"]
+type = 3
+saved_value = 0.0
+resource_name = "<null>"
+
+[sub_resource type="BTCheckVar" id="BTCheckVar_bjilo"]
+variable = &"detection_var"
+check_type = 3
+value = SubResource("BBVariant_4u2yy")
+
+[sub_resource type="BTAction" id="BTAction_4u2yy"]
+script = ExtResource("4_23i14")
+
+[sub_resource type="BBVariant" id="BBVariant_fqd8v"]
+type = 3
+saved_value = 10.0
+resource_name = "10.0"
+
+[sub_resource type="BTSetVar" id="BTSetVar_n6ogd"]
+variable = &"detection_var"
+value = SubResource("BBVariant_fqd8v")
+operation = 2
+
+[sub_resource type="BTWait" id="BTWait_eyybb"]
+duration = 0.3
+
+[sub_resource type="BTSequence" id="BTSequence_upcww"]
+custom_name = "Reset detection"
+children = [SubResource("BTInvert_bjilo"), SubResource("BTCheckVar_bjilo"), SubResource("BTAction_4u2yy"), SubResource("BTSetVar_n6ogd"), SubResource("BTWait_eyybb")]
+
+[sub_resource type="BTAction" id="BTAction_0apxy"]
+script = ExtResource("4_23i14")
+
+[sub_resource type="BTWait" id="BTWait_7iym1"]
+duration = 3.0
+
+[sub_resource type="BTAction" id="BTAction_7iym1"]
+script = ExtResource("3_kjkg0")
+speed = 20.0
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_vtlqb"]
+min_duration = 3.0
+max_duration = 10.0
+
+[sub_resource type="BTAction" id="BTAction_tboc4"]
+script = ExtResource("4_23i14")
+
+[sub_resource type="BTSequence" id="BTSequence_7cewq"]
+children = [SubResource("BTAction_7iym1"), SubResource("BTRandomWait_vtlqb"), SubResource("BTAction_tboc4")]
+
+[sub_resource type="BTProbability" id="BTProbability_vtlqb"]
+children = [SubResource("BTSequence_7cewq")]
+
+[sub_resource type="BTAction" id="BTAction_24b6r"]
+script = ExtResource("5_upcww")
+
+[sub_resource type="BTSequence" id="BTSequence_n4qy4"]
+children = [SubResource("BTAction_24b6r")]
+
+[sub_resource type="BTSelector" id="BTSelector_0apxy"]
+children = [SubResource("BTProbability_vtlqb"), SubResource("BTSequence_n4qy4")]
+
+[sub_resource type="BTSequence" id="BTSequence_kjkg0"]
+children = [SubResource("BTAction_0apxy"), SubResource("BTWait_7iym1"), SubResource("BTSelector_0apxy")]
+
+[sub_resource type="BTSequence" id="BTSequence_tw3xv"]
+custom_name = "Idle patrol"
+children = [SubResource("BTSequence_kjkg0")]
+
+[sub_resource type="BTDynamicSelector" id="BTDynamicSelector_vtlqb"]
+children = [SubResource("BTSequence_73enu"), SubResource("BTSequence_dhgfn"), SubResource("BTSequence_upcww"), SubResource("BTSequence_tw3xv")]
+
+[resource]
+blackboard_plan = SubResource("BlackboardPlan_73enu")
+root_task = SubResource("BTDynamicSelector_vtlqb")

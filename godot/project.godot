@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Miss Squirrel: The Game!"
 config/description="You're Miss Squirrel, stealing ALL the goodies!"
-run/main_scene="res://scenes/boot/godot/godot_bootsplash_scene.tscn"
+run/main_scene="uid://cik30de5gaaah"
 config/features=PackedStringArray("4.5")
 config/icon="uid://dakcoie3ntcwa"
 

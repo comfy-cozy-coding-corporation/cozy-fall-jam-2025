@@ -1,0 +1,84 @@
+[gd_scene load_steps=11 format=3 uid="uid://dtmh6wqihppb3"]
+
+[ext_resource type="Texture2D" uid="uid://cpgnqyjca6lhw" path="res://assets/enemy.png" id="1_hpe7p"]
+[ext_resource type="Script" uid="uid://mbvoxwebwfje" path="res://scenes/enemies/enemy.gd" id="1_k7o7a"]
+[ext_resource type="Texture2D" uid="uid://b8xd62sfa2bjn" path="res://assets/enemy_angry.png" id="2_7cewq"]
+[ext_resource type="Script" uid="uid://d1gr6sx8pxqx5" path="res://scenes/enemies/bt_player.gd" id="3_8axbs"]
+[ext_resource type="BehaviorTree" uid="uid://csl3srkx36g8j" path="res://scenes/enemies/EnemyBehavior.tres" id="3_73enu"]
+[ext_resource type="Texture2D" uid="uid://ek5yxamc752w" path="res://assets/enemy_suspicious.png" id="4_vtlqb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jsdvy"]
+size = Vector2(26, 67)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_24b6r"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_7cewq")
+}],
+"loop": true,
+"name": &"angry",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_hpe7p")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_vtlqb")
+}],
+"loop": true,
+"name": &"suspicious",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7cewq"]
+size = Vector2(169, 64)
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_73enu"]
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 16
+script = ExtResource("1_k7o7a")
+chase_speed_mult = 5.0
+
+[node name="hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_jsdvy")
+
+[node name="body" type="Node2D" parent="."]
+
+[node name="floorRay" type="RayCast2D" parent="body"]
+target_position = Vector2(0, 36)
+
+[node name="facingRay" type="RayCast2D" parent="body"]
+target_position = Vector2(18, 0)
+
+[node name="sprite" type="AnimatedSprite2D" parent="body"]
+scale = Vector2(0.215, 0.215)
+sprite_frames = SubResource("SpriteFrames_24b6r")
+animation = &"angry"
+
+[node name="Line2D" type="Line2D" parent="body"]
+points = PackedVector2Array(0, 0, 18, 0)
+width = 1.725
+default_color = Color(0, 0, 0, 1)
+
+[node name="SightArea" type="Area2D" parent="body"]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="SightCollider" type="CollisionShape2D" parent="body/SightArea"]
+position = Vector2(43.5, 1)
+shape = SubResource("RectangleShape2D_7cewq")
+
+[node name="BTPlayer" type="BTPlayer" parent="."]
+behavior_tree = ExtResource("3_73enu")
+blackboard_plan = SubResource("BlackboardPlan_73enu")
+script = ExtResource("3_8axbs")

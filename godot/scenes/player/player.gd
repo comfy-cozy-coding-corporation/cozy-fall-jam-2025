@@ -33,6 +33,7 @@ extends CharacterBody2D
 @export_group("Visual")
 @export var min_running_animation_speed: float = 0.5
 
+
 enum State {
 	STANDING,
 	RUNNING,

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cik30de5gaaah"]
+[gd_scene load_steps=12 format=3 uid="uid://cik30de5gaaah"]
 
 [ext_resource type="Script" uid="uid://ovjegpk30m4h" path="res://scenes/ingame_scene.gd" id="1_objyc"]
 [ext_resource type="PackedScene" uid="uid://bkk87o2ooo6at" path="res://ui/overlays/fade_overlay.tscn" id="1_y6ebv"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://dpcxbaxymuk5c" path="res://scenes/environment/environment_manager.gd" id="7_5jhce"]
 [ext_resource type="PackedScene" uid="uid://ck5qry0ad6xi5" path="res://scenes/environment/tree_scene.tscn" id="8_1sh3m"]
 [ext_resource type="PackedScene" uid="uid://cwjf8k7g6u00e" path="res://scenes/environment/bush_scene.tscn" id="8_vus8m"]
+[ext_resource type="PackedScene" uid="uid://dtmh6wqihppb3" path="res://scenes/enemies/Enemy.tscn" id="9_1sh3m"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vus8m"]
 size = Vector2(914, 37)
@@ -20,7 +21,7 @@ script = ExtResource("1_objyc")
 
 [node name="BackgroundPlaceholder" type="Sprite2D" parent="."]
 texture_filter = 2
-position = Vector2(0, -75)
+position = Vector2(-0.99999994, -75)
 scale = Vector2(0.13064511, 0.13064516)
 texture = ExtResource("6_gadrd")
 
@@ -38,6 +39,7 @@ visible = false
 [node name="Trees" type="Node2D" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("4_7v5ay")]
+position = Vector2(80, -35)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(0, -32)
@@ -54,12 +56,14 @@ bush_nodes_container = NodePath("../Bushes")
 tree_nodes_container = NodePath("../Trees")
 
 [node name="BushGenerationArea" type="Area2D" parent="EnvironmentManager"]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnvironmentManager/BushGenerationArea"]
 position = Vector2(0, -19)
 shape = SubResource("RectangleShape2D_vus8m")
 
 [node name="TreeGenerationArea" type="Area2D" parent="EnvironmentManager"]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnvironmentManager/TreeGenerationArea"]
 position = Vector2(0, -19)
@@ -68,7 +72,12 @@ shape = SubResource("RectangleShape2D_vus8m")
 [node name="Bushes" type="Node2D" parent="."]
 
 [node name="Ground" type="StaticBody2D" parent="."]
+collision_layer = 16
+collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
 position = Vector2(0, 43)
 shape = SubResource("RectangleShape2D_5jhce")
+
+[node name="Enemy" parent="." instance=ExtResource("9_1sh3m")]
+position = Vector2(-85, -46)
