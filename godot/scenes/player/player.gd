@@ -201,24 +201,27 @@ func _jump(vel: float, turnaround_speed: float):
 		velocity.y = max(velocity.y, 0) - vel
 	_instant_turnaround(turnaround_speed)
 
-func _start_ground_jump_input_window():
-	jump_window_counter += 1
-	jump_input_window.start(jump_max_hold_time)
+func _ground_jump():
+		change_state(State.JUMPING)
+		_jump(jump_velocity, max_running_speed)
+		jump_window_counter += 1
+		jump_input_window.start(jump_max_hold_time)
+
+func _touched_ground():
+	glides_available = glides_per_jump
 
 var jump_window_counter: int = 0
 var glides_available = 0
 
 func _process_on_ground(delta: float):
-	glides_available = glides_per_jump
+	_touched_ground()
 
 	if !is_on_floor():
 		change_state(State.FALLING)
 		return
 	
 	if Input.is_action_pressed("jump"):
-		change_state(State.JUMPING)
-		_jump(jump_velocity, max_running_speed)
-		_start_ground_jump_input_window()
+		_ground_jump()
 		return
 
 	var dir = _input_direction_h()
@@ -331,7 +334,14 @@ func _process_climbing(delta):
 	if climbing_on == null:
 		change_state(State.FALLING)
 		return
+
+	_touched_ground()
 	velocity.x = 0
+
+	if Input.is_action_just_pressed("jump"):
+		_ground_jump()
+		return
+
 
 	_climbing_rubber_band()
 
@@ -339,6 +349,7 @@ func _process_climbing(delta):
 		_sprite_set_speed_scale(0)
 	else:
 		_sprite_set_rel_speed(velocity.length(), max_climbing_speed, min_climbing_animation_speed)
+
 
 	var dir = _input_direction_v()
 
