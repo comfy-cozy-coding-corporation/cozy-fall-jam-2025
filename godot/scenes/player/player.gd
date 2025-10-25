@@ -39,6 +39,7 @@ extends CharacterBody2D
 @export var climbing_rubber_band_factor: float = 10.0
 @export var climbing_rubber_band_min_speed: float = 50
 @export var climbing_max_snap_distance: float = 1
+@export var perch_climb_boost: float = 5
 
 @export_group("Visual")
 @export var min_running_animation_speed: float = 0.5
@@ -52,7 +53,8 @@ enum State {
 	RISING,
 	FALLING,
 	GLIDING,
-	CLIMBING
+	CLIMBING,
+	PERCHED
 }
 
 enum PlayerAnimation {
@@ -65,6 +67,7 @@ enum PlayerAnimation {
 	STAND_INTO_FALLING,
 	FALL_INTO_GLIDING,
 	CLIMBING,
+	PERCHED
 }
 
 var state = State.STANDING
@@ -88,7 +91,7 @@ func play(anim: PlayerAnimation):
 		PlayerAnimation.LAND_INTO_STANDING:
 			sprite.play("landing")
 			animation_queue.push_back("standing")
-		PlayerAnimation.STANDING:
+		PlayerAnimation.STANDING, PlayerAnimation.PERCHED:
 			sprite.play("standing")
 		PlayerAnimation.RUNNING:
 			sprite.play("running")
@@ -135,6 +138,8 @@ func change_state(new_state: State):
 			play(PlayerAnimation.FALL_INTO_GLIDING)
 		State.CLIMBING:
 			play(PlayerAnimation.CLIMBING)
+		State.PERCHED:
+			play(PlayerAnimation.PERCHED)
 	state = new_state
 
 var facing_dir: int = -1
@@ -223,6 +228,7 @@ func _touched_ground():
 var glides_available = 0
 
 func _process_on_ground(delta: float):
+	_check_climbing()
 	_touched_ground()
 
 	if !is_on_floor():
@@ -276,6 +282,8 @@ func _on_jump_input_window_timeout():
 		change_state(State.RISING)
 
 func _process_in_air(delta: float):
+	_check_climbing()
+
 	if state == State.JUMPING && !Input.is_action_pressed("jump"):
 		change_state(State.RISING)
 
@@ -330,7 +338,7 @@ func _check_climbing():
 	climbing_on = _get_climb_area()
 	if climbing_on == null: return
 
-	if Input.is_action_pressed("move_up") || Input.is_action_pressed("move_down"):
+	if Input.is_action_pressed("move_up") || !is_on_floor() && Input.is_action_pressed("move_down"):
 		change_state(State.CLIMBING)
 
 func _climbing_rubber_band():
@@ -347,9 +355,26 @@ func _climbing_snap_position():
 	if abs(global_position.y - ideal_global_position.y) < climbing_max_snap_distance:
 		global_position.y = ideal_global_position.y
 
+var facing_dir_before_climbing = null
+
+func _reset_facing_dir_after_climbing():
+	_sprite_face(facing_dir_before_climbing)
+	facing_dir_before_climbing = null
+
+func _remember_facing_dir():
+	if facing_dir_before_climbing == null:
+		facing_dir_before_climbing = facing_dir
+
+
 func _process_climbing(delta):
-	if climbing_on == null:
-		change_state(State.FALLING)
+	_remember_facing_dir()
+
+	if _get_climb_area() == null:
+		_reset_facing_dir_after_climbing()
+		if velocity.y <= 0 && Input.is_action_pressed("move_up"):
+			change_state(State.PERCHED)
+		else:
+			change_state(State.FALLING)
 		return
 
 	_touched_ground()
@@ -371,6 +396,7 @@ func _process_climbing(delta):
 	var dir = _input_direction_v()
 
 	if dir == 1 && is_on_floor():
+		_reset_facing_dir_after_climbing()
 		change_state(State.STANDING)
 		return
 
@@ -380,12 +406,26 @@ func _process_climbing(delta):
 	else:
 		velocity.y = _decelerate(delta, velocity.y, climbing_deceleration)
 
+func _process_perched():
+	velocity = Vector2.ZERO
+	_climbing_rubber_band()
+
+	if Input.is_action_pressed("jump"):
+		_ground_jump()
+		return
+
+	var dir = _input_direction_h()
+	_sprite_face(dir)
+
+	if Input.is_action_pressed("move_down"):
+		position.y += perch_climb_boost
+		change_state(State.CLIMBING)
+
 func _adjust_positon():
-	if state == State.CLIMBING && climbing_on != null:
+	if (state == State.CLIMBING || state == State.PERCHED) && climbing_on != null:
 		_climbing_snap_position()
 
 func _physics_process(delta: float) -> void:
-	_check_climbing()
 	match state:
 		State.CLIMBING:
 			_process_climbing(delta)
@@ -393,6 +433,8 @@ func _physics_process(delta: float) -> void:
 			_process_on_ground(delta)
 		State.JUMPING, State.RISING, State.FALLING, State.GLIDING:
 			_process_in_air(delta)
+		State.PERCHED:
+			_process_perched()
 	move_and_slide()
 	_adjust_positon()
 
@@ -403,9 +445,9 @@ func _ready() -> void:
 	jump_input_window.one_shot = true
 
 
-func _on_hiding_area_area_entered(area: Area2D) -> void:
+func _on_hiding_area_area_entered() -> void:
 	hiding = true
 
 
-func _on_hiding_area_area_exited(area: Area2D) -> void:
+func _on_hiding_area_area_exited() -> void:
 	hiding = false

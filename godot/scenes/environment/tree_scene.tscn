@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://ck5qry0ad6xi5"]
 
-[ext_resource type="Script" uid="uid://c7ca0putvnfno" path="res://scenes/environment/tree_scene.gd" id="1_qdoyn"]
+[ext_resource type="Script" path="res://scenes/environment/tree_scene.gd" id="1_qdoyn"]
 [ext_resource type="PackedScene" uid="uid://cs3l2nsfdeam7" path="res://scenes/player/climb_area.tscn" id="2_08qca"]
 [ext_resource type="Texture2D" uid="uid://bpyodnbb2p06g" path="res://assets/trees.png" id="2_yocge"]
 
@@ -34,7 +34,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_08qca"]
-size = Vector2(20, 103)
+size = Vector2(20, 119.5)
 
 [node name="TreeScene" type="Node2D"]
 script = ExtResource("1_qdoyn")
@@ -44,8 +44,9 @@ sprite_frames = SubResource("SpriteFrames_uo4j4")
 offset = Vector2(0, -64)
 
 [node name="ClimbArea" parent="." instance=ExtResource("2_08qca")]
+position = Vector2(2, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ClimbArea"]
-position = Vector2(0, -51)
+position = Vector2(-1, -59.25)
 shape = SubResource("RectangleShape2D_08qca")
 debug_color = Color(0.9592466, 3.85046e-07, 0.5253619, 0.41960785)
