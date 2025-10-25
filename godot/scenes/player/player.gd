@@ -212,8 +212,8 @@ func _process_on_ground(delta: float):
 	var dir = _input_direction_h()
 	if dir != 0:
 		change_state(State.RUNNING)
-		_accelerate(delta, facing_dir, max_running_speed, running_acceleration, running_turnaround_acceleration)
 		_sprite_face(dir)
+		_accelerate(delta, facing_dir, max_running_speed, running_acceleration, running_turnaround_acceleration)
 	else:
 		_decelerate(delta, running_deceleration)
 
