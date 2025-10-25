@@ -44,7 +44,6 @@ size = Vector2(169, 64)
 
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 4
-collision_mask = 16
 script = ExtResource("1_k7o7a")
 chase_speed_mult = 5.0
 
@@ -62,7 +61,6 @@ target_position = Vector2(18, 0)
 [node name="sprite" type="AnimatedSprite2D" parent="body"]
 scale = Vector2(0.215, 0.215)
 sprite_frames = SubResource("SpriteFrames_24b6r")
-animation = &"angry"
 
 [node name="Line2D" type="Line2D" parent="body"]
 points = PackedVector2Array(0, 0, 18, 0)

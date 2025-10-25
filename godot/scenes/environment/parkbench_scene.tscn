@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://ca6het3qxni51"]
 
-[ext_resource type="Script" uid="uid://bb2mkyc3notgl" path="res://scenes/environment/parkbench_scene.gd" id="1_ovg45"]
+[ext_resource type="Script" path="res://scenes/environment/parkbench_scene.gd" id="1_ovg45"]
 [ext_resource type="Texture2D" uid="uid://kxdvexc4nmyp" path="res://assets/bench-sheet.png" id="2_ovg45"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3eyif"]
@@ -51,6 +51,8 @@ sprite_frames = SubResource("SpriteFrames_djddo")
 offset = Vector2(0, -16)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 8
+collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(0, -10)
@@ -58,6 +60,8 @@ scale = Vector2(0.035, 0.035)
 shape = SubResource("RectangleShape2D_c66l2")
 
 [node name="BottomArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BottomArea"]
 position = Vector2(0, -4)
