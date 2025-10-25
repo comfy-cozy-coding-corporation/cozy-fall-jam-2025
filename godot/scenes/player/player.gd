@@ -1,3 +1,4 @@
+class_name Player
 extends CharacterBody2D
 
 @export_group("Movement")
@@ -30,6 +31,12 @@ extends CharacterBody2D
 @export var flap_velocity: float = 280
 @export var flap_forward_velocity: float = 100
 
+@export_subgroup("Climbing")
+@export var max_climbing_speed: float = 100
+@export var climbing_acceleration: float = 1500
+@export var climbing_turnaround_acceleration: float = 10000
+@export var climbing_deceleration: float = 1500
+
 @export_group("Visual")
 @export var min_running_animation_speed: float = 0.5
 
@@ -39,7 +46,8 @@ enum State {
 	JUMPING,
 	RISING,
 	FALLING,
-	GLIDING
+	GLIDING,
+	CLIMBING
 }
 
 enum PlayerAnimation {
@@ -55,12 +63,13 @@ enum PlayerAnimation {
 
 var state = State.STANDING
 
-@onready var sprite: AnimatedSprite2D = self.find_child("PlayerSprite")
-@onready var jump_input_window: Timer = self.find_child("JumpInputWindow")
+@onready var sprite: AnimatedSprite2D = $PlayerSprite
+@onready var jump_input_window: Timer = $JumpInputWindow
+@onready var interaction_area: Area2D = $InteractionArea
 
 var animation_queue = []
 
-func play_next_animation():
+func _play_next_animation():
 	var next_anim = animation_queue.pop_front()
 	if next_anim != null:
 		sprite.play(next_anim)
@@ -78,7 +87,7 @@ func play(anim: PlayerAnimation):
 		PlayerAnimation.JUMPING:
 			sprite.play("jumping")
 		PlayerAnimation.FLAP:
-			sprite.play("flap")
+			sprite.play("_flap")
 		PlayerAnimation.RISE_INTO_FALLING:
 			sprite.play("jump_to_fall")
 			animation_queue.push_back("falling")
@@ -117,17 +126,18 @@ func change_state(new_state):
 
 var facing_dir = -1
 
-func sprite_face(direction: float):
+func _sprite_face(direction: float):
 	facing_dir = direction
 	sprite.flip_h = facing_dir == 1
 
-func sprite_set_running_speed(speed: float):
+
+func _sprite_set_running_speed(speed: float):
 	if state != State.RUNNING: return
 	sprite.speed_scale = (speed / max_running_speed) * (1 - min_running_animation_speed) + min_running_animation_speed
 
 
-func run_accelerate(direction: float, delta: float):
-	sprite_face(direction)
+func _run_accelerate(direction: float, delta: float):
+	_sprite_face(direction)
 
 	var delta_vel
 	if sign(velocity.x) == direction:
@@ -139,12 +149,12 @@ func run_accelerate(direction: float, delta: float):
 		return
 
 	velocity.x = min(max_running_speed, direction * (velocity.x + delta_vel)) * direction
-	sprite_set_running_speed(abs(velocity.x))
+	_sprite_set_running_speed(abs(velocity.x))
 
 func run_decelerate(delta: float):
 	var delta_vel = delta * running_deceleration
 	velocity.x = max(0, abs(velocity.x) - delta_vel) * sign(velocity.x)
-	sprite_set_running_speed(abs(velocity.x))
+	_sprite_set_running_speed(abs(velocity.x))
 
 
 var jump_window_counter: int = 0
@@ -161,15 +171,15 @@ func jump():
 	velocity.y -= jump_velocity
 
 	if Input.is_action_pressed("move_left") && !Input.is_action_pressed("move_right"):
-		sprite_face(-1)
+		_sprite_face(-1)
 		velocity.x = -max(abs(velocity.x), max_running_speed)
 	elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
-		sprite_face(1)
+		_sprite_face(1)
 		velocity.x = max(abs(velocity.x), max_running_speed)
 	else:
 		velocity.x = 0
 
-func process_on_ground(delta: float):
+func _process_on_ground(delta: float):
 	if !is_on_floor():
 		change_state(State.FALLING)
 		return
@@ -179,15 +189,15 @@ func process_on_ground(delta: float):
 		change_state(State.JUMPING)
 	elif Input.is_action_pressed("move_left") && !Input.is_action_pressed("move_right"):
 		change_state(State.RUNNING)
-		run_accelerate(-1, delta)
+		_run_accelerate(-1, delta)
 	elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
 		change_state(State.RUNNING)
-		run_accelerate(1, delta)
+		_run_accelerate(1, delta)
 	else:
 		change_state(State.STANDING)
 		run_decelerate(delta)
 
-func apply_gravity(delta):
+func _apply_gravity(delta):
 	if state == State.JUMPING:
 		velocity.y += jumping_gravity * delta
 	elif state == State.GLIDING:
@@ -195,22 +205,22 @@ func apply_gravity(delta):
 	else:
 		velocity.y += falling_gravity * delta
 
-func apply_air_resistance(delta):
+func _apply_air_resistance(delta):
 	if sign(velocity.y) <= 0:
 		return
 	velocity.y *= (1 - clamp(gliding_air_resistance * delta, 0, 1))
 
 
 
-func flap():
+func _flap():
 	if velocity.y > -flap_velocity:
 		velocity.y = max(velocity.y, 0) - flap_velocity
 
 	if Input.is_action_pressed("move_left") && !Input.is_action_pressed("move_right"):
-		sprite_face(-1)
+		_sprite_face(-1)
 		velocity.x = -max(-velocity.x, flap_forward_velocity)
 	elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
-		sprite_face(1)
+		_sprite_face(1)
 		velocity.x = max(velocity.x, flap_forward_velocity)
 	else:
 		velocity.x = 0
@@ -218,7 +228,7 @@ func flap():
 	play(PlayerAnimation.FLAP)
 	change_state(State.RISING)
 
-func glide_accelerate(delta: float):
+func _glide_accelerate(delta: float):
 	var delta_vel
 	if sign(velocity.x) == facing_dir:
 		delta_vel = gliding_acceleration * delta * facing_dir
@@ -227,16 +237,16 @@ func glide_accelerate(delta: float):
 
 	velocity.x = min(max_gliding_speed, facing_dir * (velocity.x + delta_vel)) * facing_dir
 	if Input.is_action_pressed("move_left") && !Input.is_action_pressed("move_right"):
-		sprite_face(-1)
+		_sprite_face(-1)
 	elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
-		sprite_face(1)
+		_sprite_face(1)
 
-func fall_accelerate(direction: float, delta: float):
+func _fall_accelerate(direction: float, delta: float):
 	var delta_vel = delta * direction * air_control_accceleration
 	velocity.x = min(max_running_speed, direction * (velocity.x + delta_vel)) * direction
 
 
-func process_in_air(delta: float):
+func _process_in_air(delta: float):
 	if state == State.JUMPING && (jump_window_counter == 0 || !Input.is_action_pressed("jump")):
 		change_state(State.RISING)
 
@@ -253,35 +263,61 @@ func process_in_air(delta: float):
 				if glides_available > 0:
 					change_state(State.GLIDING)
 					glides_available -= 1
-			State.GLIDING: flap()
+			State.GLIDING: _flap()
 
 	if state == State.GLIDING:
-		glide_accelerate(delta)
+		_glide_accelerate(delta)
 	elif state == State.RISING || state == State.FALLING:
 		if Input.is_action_pressed("move_left") && !Input.is_action_pressed("move_right"):
-			fall_accelerate(-1, delta)
+			_fall_accelerate(-1, delta)
 		elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
-			fall_accelerate(1, delta)
-		sprite_face(sign(velocity.x))
+			_fall_accelerate(1, delta)
+		_sprite_face(sign(velocity.x))
 
-	apply_gravity(delta)
+	_apply_gravity(delta)
 
 	if state == State.GLIDING:
-		apply_air_resistance(delta)
+		_apply_air_resistance(delta)
 
+func _get_climb_area() -> ClimbArea:
+	var climbing_area: ClimbArea = null
+	var closest_distance = INF
+	var areas: Array[Area2D] = interaction_area.get_overlapping_areas()
+	for area in areas:
+		if !(area is ClimbArea):
+			continue
+
+		var dist = area.position.distance_squared_to(self.position)
+		if dist < closest_distance:
+			closest_distance = dist
+			climbing_area = area
 	
+	return climbing_area
+
+func _check_climbing():
+	var area = _get_climb_area()
+	if area == null: return
+
+	if Input.is_action_pressed("move_up") || Input.is_action_pressed("move_down"):
+		change_state(State.CLIMBING)
+
+func _process_climbing():
+	pass
 
 func _physics_process(delta: float) -> void:
+	_check_climbing()
 	match state:
+		State.CLIMBING:
+			_process_climbing()
 		State.STANDING, State.RUNNING:
-			process_on_ground(delta)
+			_process_on_ground(delta)
 		State.JUMPING, State.RISING, State.FALLING, State.GLIDING:
-			process_in_air(delta)
+			_process_in_air(delta)
 	move_and_slide()
 
 
 func _ready() -> void:
-	sprite.animation_finished.connect(play_next_animation)
+	sprite.animation_finished.connect(_play_next_animation)
 	jump_input_window.wait_time = jump_max_hold_time
 	jump_input_window.one_shot = true
 	jump_input_window.timeout.connect(func(): jump_window_counter -= 1)
