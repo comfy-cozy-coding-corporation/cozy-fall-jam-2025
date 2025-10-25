@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://bum8grp8k142r"]
+[gd_scene load_steps=37 format=3 uid="uid://bum8grp8k142r"]
 
 [ext_resource type="Script" uid="uid://doko4bbej1l7j" path="res://scenes/player/player.gd" id="1_dovo2"]
 [ext_resource type="Texture2D" uid="uid://doi0d2klrveqx" path="res://assets/player.png" id="2_gmlin"]
@@ -272,17 +272,18 @@ size = Vector2(7, 6)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dovo2"]
 size = Vector2(18, 13)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gmlin"]
+size = Vector2(18, 13)
+
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
-collision_mask = 9
+collision_mask = 25
 script = ExtResource("1_dovo2")
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_smehm")
-animation = &"climbing"
-frame = 1
-frame_progress = 0.9623312
+animation = &"running"
 
 [node name="CollisionBox" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, -3)
@@ -300,4 +301,16 @@ position = Vector2(0, -6.5)
 shape = SubResource("RectangleShape2D_dovo2")
 debug_color = Color(0.9592466, 3.85046e-07, 0.5253619, 0.41960785)
 
+[node name="HidingArea" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HidingArea"]
+position = Vector2(0, -6.5)
+shape = SubResource("RectangleShape2D_gmlin")
+
 [connection signal="timeout" from="JumpInputWindow" to="." method="_on_jump_input_window_timeout"]
+[connection signal="area_entered" from="HidingArea" to="." method="_on_hiding_area_area_entered"]
+[connection signal="area_exited" from="HidingArea" to="." method="_on_hiding_area_area_exited"]
+[connection signal="body_entered" from="HidingArea" to="." method="_on_hiding_area_body_entered"]
+[connection signal="body_exited" from="HidingArea" to="." method="_on_hiding_area_body_exited"]

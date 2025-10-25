@@ -68,6 +68,7 @@ enum PlayerAnimation {
 }
 
 var state = State.STANDING
+@export var hiding = false
 
 @onready var sprite: AnimatedSprite2D = $PlayerSprite
 @onready var jump_input_window: Timer = $JumpInputWindow
@@ -384,7 +385,6 @@ func _physics_process(delta: float) -> void:
 			_process_on_ground(delta)
 		State.JUMPING, State.RISING, State.FALLING, State.GLIDING:
 			_process_in_air(delta)
-	print(state)
 	move_and_slide()
 	_adjust_positon()
 
@@ -393,3 +393,11 @@ func _ready() -> void:
 	sprite.animation_finished.connect(_play_next_animation)
 	jump_input_window.wait_time = jump_max_hold_time
 	jump_input_window.one_shot = true
+
+
+func _on_hiding_area_area_entered(area: Area2D) -> void:
+	hiding = true
+
+
+func _on_hiding_area_area_exited(area: Area2D) -> void:
+	hiding = false

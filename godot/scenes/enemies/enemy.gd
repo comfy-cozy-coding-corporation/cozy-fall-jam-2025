@@ -22,7 +22,6 @@ func _process(delta: float) -> void:
 	$body.scale.x = facing_direction
 
 func _physics_process(delta: float) -> void:
-	print(can_see_player())
 	if not $body/floorRay.get_collider():
 		velocity.y += gravity * delta
 	move_and_slide()
@@ -37,8 +36,13 @@ func turn_around():
 	facing_direction *= -1
 	
 func can_see_player():
-	var collider = $body/SightArea.get_overlapping_bodies()
-	return true if collider else false
+	var colliders = $body/SightArea.get_overlapping_bodies()
+	if len(colliders) == 0:
+		return false
+	var collider: Player = colliders[0]
+	if collider.hiding:
+		return false
+	return true
 
 func turn_toward_player():
 	if not can_see_player():

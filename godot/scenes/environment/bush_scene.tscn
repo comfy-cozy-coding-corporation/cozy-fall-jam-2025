@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cwjf8k7g6u00e"]
+[gd_scene load_steps=10 format=3 uid="uid://cwjf8k7g6u00e"]
 
 [ext_resource type="Texture2D" uid="uid://c4i40gt45vjuv" path="res://assets/bushes.png" id="1_70nf7"]
 [ext_resource type="Script" uid="uid://ccaovfdee47m6" path="res://scenes/environment/bush_scene.gd" id="2_nt5sc"]
@@ -46,6 +46,17 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nt5sc"]
+size = Vector2(27, 11)
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_kt03l")
 script = ExtResource("2_nt5sc")
+
+[node name="HidingArea" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 18
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HidingArea"]
+position = Vector2(-0.5, 10.5)
+shape = SubResource("RectangleShape2D_nt5sc")
