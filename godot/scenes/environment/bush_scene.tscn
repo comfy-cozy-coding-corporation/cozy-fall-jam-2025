@@ -1,9 +1,51 @@
-[gd_scene load_steps=2 format=3 uid="uid://cwjf8k7g6u00e"]
+[gd_scene load_steps=9 format=3 uid="uid://cwjf8k7g6u00e"]
 
-[ext_resource type="Texture2D" uid="uid://dy1sfb4ctf8k" path="res://assets/bush_placeholder.png" id="1_70nf7"]
+[ext_resource type="Texture2D" uid="uid://c4i40gt45vjuv" path="res://assets/bushes.png" id="1_70nf7"]
+[ext_resource type="Script" uid="uid://ccaovfdee47m6" path="res://scenes/environment/bush_scene.gd" id="2_nt5sc"]
 
-[node name="BushPlaceholder" type="Sprite2D"]
-texture_filter = 2
-position = Vector2(0, -13.999999)
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("1_70nf7")
+[sub_resource type="AtlasTexture" id="AtlasTexture_nt5sc"]
+atlas = ExtResource("1_70nf7")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_12fxt"]
+atlas = ExtResource("1_70nf7")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m2iih"]
+atlas = ExtResource("1_70nf7")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1pt8q"]
+atlas = ExtResource("1_70nf7")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1i2nb"]
+atlas = ExtResource("1_70nf7")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kt03l"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nt5sc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_12fxt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m2iih")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1pt8q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1i2nb")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_kt03l")
+script = ExtResource("2_nt5sc")
