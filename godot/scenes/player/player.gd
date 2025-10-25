@@ -204,13 +204,12 @@ func _jump(vel: float, turnaround_speed: float):
 func _ground_jump():
 		change_state(State.JUMPING)
 		_jump(jump_velocity, max_running_speed)
-		jump_window_counter += 1
+		jump_input_window.stop()
 		jump_input_window.start(jump_max_hold_time)
 
 func _touched_ground():
 	glides_available = glides_per_jump
 
-var jump_window_counter: int = 0
 var glides_available = 0
 
 func _process_on_ground(delta: float):
@@ -262,8 +261,12 @@ func _flap():
 		play(PlayerAnimation.FLAP)
 		change_state(State.RISING)
 
+func _on_jump_input_window_timeout():
+	if state == State.JUMPING:
+		change_state(State.RISING)
+
 func _process_in_air(delta: float):
-	if state == State.JUMPING && (jump_window_counter == 0 || !Input.is_action_pressed("jump")):
+	if state == State.JUMPING && !Input.is_action_pressed("jump"):
 		change_state(State.RISING)
 
 	if state == State.RISING && sign(velocity.y) != -1:
@@ -380,6 +383,7 @@ func _physics_process(delta: float) -> void:
 			_process_on_ground(delta)
 		State.JUMPING, State.RISING, State.FALLING, State.GLIDING:
 			_process_in_air(delta)
+	print(state)
 	move_and_slide()
 	_adjust_positon()
 
@@ -388,4 +392,3 @@ func _ready() -> void:
 	sprite.animation_finished.connect(_play_next_animation)
 	jump_input_window.wait_time = jump_max_hold_time
 	jump_input_window.one_shot = true
-	jump_input_window.timeout.connect(func(): jump_window_counter -= 1)

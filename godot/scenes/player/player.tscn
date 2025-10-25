@@ -297,3 +297,5 @@ collision_mask = 128
 position = Vector2(0, -6.5)
 shape = SubResource("RectangleShape2D_dovo2")
 debug_color = Color(0.9592466, 3.85046e-07, 0.5253619, 0.41960785)
+
+[connection signal="timeout" from="JumpInputWindow" to="." method="_on_jump_input_window_timeout"]
