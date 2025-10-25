@@ -269,7 +269,7 @@ func _process_in_air(delta: float):
 	if state == State.RISING && sign(velocity.y) != -1:
 		change_state(State.FALLING)
 
-	if state != State.JUMPING && is_on_floor():
+	if velocity.y <= 0 && is_on_floor():
 		change_state(State.STANDING)
 		return
 	
