@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=3 uid="uid://ca6het3qxni51"]
+
+[ext_resource type="Script" uid="uid://bb2mkyc3notgl" path="res://scenes/environment/parkbench_scene.gd" id="1_ovg45"]
+[ext_resource type="Texture2D" uid="uid://kxdvexc4nmyp" path="res://assets/bench-sheet.png" id="2_ovg45"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3eyif"]
+atlas = ExtResource("2_ovg45")
+region = Rect2(48, 0, 48, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xtnig"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3eyif")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_swbh7"]
+atlas = ExtResource("2_ovg45")
+region = Rect2(0, 0, 48, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_djddo"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_swbh7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c66l2"]
+size = Vector2(1085.7142, 57.142868)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k5gtu"]
+size = Vector2(46, 8)
+
+[node name="ParkbenchScene" type="Node2D"]
+script = ExtResource("1_ovg45")
+
+[node name="TopBench" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_xtnig")
+offset = Vector2(0, -16)
+
+[node name="BottomBench" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_djddo")
+offset = Vector2(0, -16)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, -10)
+scale = Vector2(0.035, 0.035)
+shape = SubResource("RectangleShape2D_c66l2")
+
+[node name="BottomArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BottomArea"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_k5gtu")
+
+[connection signal="area_entered" from="BottomArea" to="." method="_on_bottom_area_area_entered"]

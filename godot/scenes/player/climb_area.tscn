@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cs3l2nsfdeam7"]
+
+[ext_resource type="Script" uid="uid://ktjawawa7xgf" path="res://scenes/player/climb_area.gd" id="1_328q6"]
+
+[node name="ClimbArea" type="Area2D"]
+collision_layer = 128
+collision_mask = 0
+script = ExtResource("1_328q6")
+layer = null
