@@ -1,37 +1,35 @@
 extends Camera2D
 
-@export var target: Node2D
-@export var speed: float = 200
+@export var target: Player
 @export var min_dist: float = 70
-@export var easing_harshness: float = 2
-@export var acceleration: float = 800
+@export var lookahead_offset: float = 100
+@export var spring_constant = 0.8
+@export var velocity_compensation: float = 0.11
+@export var damping_factor = 8.0
 
 var x_velocity = 0
+
+func _get_ideal_position() -> float:
+	var direction = target.get_looking_direction()
+	if direction == 0:
+		return self.global_position.x
+	return target.global_position.x + direction * lookahead_offset
+
+func _spring_transform(x: float):
+	return sign(x) * (pow(x + 1, 2) - 1) / 2
+
+func _get_acceleration(ideal_pos: float):
+	var pos_offset =  self.global_position.x - ideal_pos
+	return -_spring_transform(spring_constant * pos_offset) - damping_factor * x_velocity
+
+func _get_velocity_compensation() -> float:
+	return velocity_compensation * target.velocity.x
 
 func _process(delta: float) -> void:
 	if target == null:
 		return
 
-	var target_x = target.global_position.x
-	var dist_x = target_x - self.global_position.x 
-
-
-	var ideal_velocity
-	if abs(dist_x) < min_dist:
-		ideal_velocity = 0
-	else:
-		ideal_velocity = sign(dist_x) * speed * pow(abs(dist_x), easing_harshness) / pow(abs(min_dist), easing_harshness)
-	
-	var velocity_diff = ideal_velocity - x_velocity
-	var da = delta * sign(velocity_diff) * acceleration
-	if abs(da) >= abs(velocity_diff):
-		x_velocity = ideal_velocity
-	else:
-		x_velocity += da
-	
-	var dv = x_velocity * delta
-	if abs(dv) >= abs(dist_x):
-		self.global_position.x = target_x
-		x_velocity = 0
-		return
-	self.global_position.x += dv
+	var ideal_pos = _get_ideal_position()
+	var acc = _get_acceleration(ideal_pos)
+	x_velocity += acc * delta + _get_velocity_compensation()
+	self.global_position.x += x_velocity * delta

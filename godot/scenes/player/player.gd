@@ -137,9 +137,17 @@ func change_state(new_state: State):
 			play(PlayerAnimation.CLIMBING)
 	state = new_state
 
-var facing_dir = -1
+var facing_dir: int = -1
 
-func _sprite_face(direction: float):
+func get_looking_direction() -> int:
+	match state:
+		State.CLIMBING:
+			return 0
+		State.GLIDING:
+			return sign(velocity.x)
+	return facing_dir
+
+func _sprite_face(direction: int):
 	if direction == 0:
 		return
 	facing_dir = direction
@@ -154,7 +162,7 @@ func _sprite_set_rel_speed(speed: float, max_speed: float, min_anim_speed: float
 func _accelerate(
 	delta: float,
 	current_velocity: float,
-	direction: float,
+	direction: int,
 	max_speed: float,
 	acceleration: float,
 	turnaround_acceleration: float
@@ -176,7 +184,7 @@ func _accelerate(
 func _decelerate(delta: float, current_velocity: float, deceleration: float) -> float:
 	return _accelerate(delta, current_velocity, -sign(current_velocity), 0, deceleration, deceleration)
 
-func _input_direction_h():
+func _input_direction_h() -> int:
 	if Input.is_action_pressed("move_left") && !Input.is_action_pressed("move_right"):
 		return -1
 	elif Input.is_action_pressed("move_right") && !Input.is_action_pressed("move_left"):
@@ -184,7 +192,7 @@ func _input_direction_h():
 	else:
 		return 0
 
-func _input_direction_v() -> float:
+func _input_direction_v() -> int:
 	if Input.is_action_pressed("move_up") && !Input.is_action_pressed("move_down"):
 		return -1
 	elif Input.is_action_pressed("move_down") && !Input.is_action_pressed("move_up"):
@@ -299,7 +307,7 @@ func _process_in_air(delta: float):
 			_apply_air_resistance(delta)
 		State.RISING, State.FALLING:
 			velocity.x = _accelerate(delta, velocity.x, dir, max_air_control_speed, air_control_accceleration, air_control_accceleration)
-			_sprite_face(sign(velocity.x))
+			_sprite_face(round(sign(velocity.x)))
 
 func _get_climb_area() -> ClimbArea:
 	var climbing_area: ClimbArea = null
