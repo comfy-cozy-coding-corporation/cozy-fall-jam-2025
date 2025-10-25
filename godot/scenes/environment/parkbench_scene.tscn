@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://ca6het3qxni51"]
+
+[ext_resource type="Texture2D" uid="uid://b1lc4cgj4647u" path="res://assets/parkbench_placeholder.png" id="1_c66l2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c66l2"]
+size = Vector2(1059, 130)
+
+[node name="ParkbenchScene" type="Node2D"]
+scale = Vector2(0.08, 0.08)
+
+[node name="ParkbenchPlaceholder" type="Sprite2D" parent="."]
+position = Vector2(0, -360)
+texture = ExtResource("1_c66l2")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(4.5, -285)
+shape = SubResource("RectangleShape2D_c66l2")
