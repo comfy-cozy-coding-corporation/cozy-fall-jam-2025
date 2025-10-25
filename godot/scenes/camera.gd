@@ -9,6 +9,9 @@ extends Camera2D
 var x_velocity = 0
 
 func _process(delta: float) -> void:
+	if target == null:
+		return
+
 	var target_x = target.global_position.x
 	var dist_x = target_x - self.global_position.x 
 
