@@ -36,6 +36,9 @@ extends CharacterBody2D
 @export var climbing_acceleration: float = 1500
 @export var climbing_turnaround_acceleration: float = 10000
 @export var climbing_deceleration: float = 1500
+@export var climbing_rubber_band_factor: float = 10.0
+@export var climbing_rubber_band_min_speed: float = 50
+@export var climbing_max_snap_distance: float = 1
 
 @export_group("Visual")
 @export var min_running_animation_speed: float = 0.5
@@ -309,27 +312,49 @@ func _check_climbing():
 	if Input.is_action_pressed("move_up") || Input.is_action_pressed("move_down"):
 		change_state(State.CLIMBING)
 
+func _climbing_rubber_band():
+	var ideal_global_position = climbing_on.snap_global(global_position)
+	var offs = ideal_global_position - global_position
+	print(offs)
+	if offs.is_zero_approx():
+		return
+	velocity = offs.normalized() * max(offs.length() * climbing_rubber_band_factor, climbing_rubber_band_min_speed)
+
+func _climbing_snap_position():
+	var ideal_global_position = climbing_on.snap_global(global_position)
+	if abs(global_position.x - ideal_global_position.x) < climbing_max_snap_distance:
+		global_position.x = ideal_global_position.x
+	if abs(global_position.y - ideal_global_position.y) < climbing_max_snap_distance:
+		global_position.y = ideal_global_position.y
+
 func _process_climbing(delta):
 	if climbing_on == null:
 		change_state(State.FALLING)
 		return
-
 	velocity.x = 0
-	if velocity.y == 0:
+
+	_climbing_rubber_band()
+
+	if velocity.is_zero_approx():
 		_sprite_set_speed_scale(0)
 	else:
-		_sprite_set_rel_speed(abs(velocity.y), max_climbing_speed, min_climbing_animation_speed)
+		_sprite_set_rel_speed(velocity.length(), max_climbing_speed, min_climbing_animation_speed)
 
 	var dir = _input_direction_v()
+
+	if dir == 1 && is_on_floor():
+		change_state(State.STANDING)
+		return
+
 	if dir != 0:
 		_sprite_face(dir)
 		velocity.y = _accelerate(delta, velocity.y, dir, max_climbing_speed, climbing_acceleration, climbing_turnaround_acceleration)
 	else:
 		velocity.y = _decelerate(delta, velocity.y, climbing_deceleration)
 
-func _adjust_position():
-	if climbing_on != null:
-		global_position = climbing_on.snap_global(global_position)
+func _adjust_positon():
+	if state == State.CLIMBING && climbing_on != null:
+		_climbing_snap_position()
 
 func _physics_process(delta: float) -> void:
 	_check_climbing()
@@ -341,7 +366,7 @@ func _physics_process(delta: float) -> void:
 		State.JUMPING, State.RISING, State.FALLING, State.GLIDING:
 			_process_in_air(delta)
 	move_and_slide()
-	_adjust_position()
+	_adjust_positon()
 
 
 func _ready() -> void:
