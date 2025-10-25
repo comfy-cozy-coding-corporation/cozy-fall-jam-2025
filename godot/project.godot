@@ -14,7 +14,7 @@ config/name="Miss Squirrel: The Game!"
 config/description="You're Miss Squirrel, stealing ALL the goodies!"
 run/main_scene="res://scenes/boot/godot/godot_bootsplash_scene.tscn"
 config/features=PackedStringArray("4.5")
-config/icon="res://icon.svg"
+config/icon="uid://dakcoie3ntcwa"
 
 [autoload]
 
@@ -22,6 +22,8 @@ UserSettings="*res://settings/user_settings.gd"
 
 [display]
 
+window/size/viewport_width=1280
+window/size/viewport_height=720
 window/size/mode=3
 window/size/window_width_override=1920
 window/size/window_height_override=1080
@@ -98,7 +100,7 @@ pause={
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://i18n/translation.de.translation", "res://i18n/translation.en.translation")
+locale/translations=PackedStringArray("res://i18n/translation.en.translation")
 
 [rendering]
 
