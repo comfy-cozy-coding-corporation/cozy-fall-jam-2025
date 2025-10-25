@@ -4,5 +4,6 @@
 
 [node name="BushPlaceholder" type="Sprite2D"]
 texture_filter = 2
+position = Vector2(0, -13.999999)
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("1_70nf7")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cik30de5gaaah"]
+[gd_scene load_steps=11 format=3 uid="uid://cik30de5gaaah"]
 
 [ext_resource type="Script" uid="uid://ovjegpk30m4h" path="res://scenes/ingame_scene.gd" id="1_objyc"]
 [ext_resource type="PackedScene" uid="uid://bkk87o2ooo6at" path="res://ui/overlays/fade_overlay.tscn" id="1_y6ebv"]
@@ -6,7 +6,11 @@
 [ext_resource type="PackedScene" uid="uid://bum8grp8k142r" path="res://scenes/player/player.tscn" id="4_7v5ay"]
 [ext_resource type="Texture2D" uid="uid://ypb5vlxu6sj7" path="res://assets/background_placeholder.png" id="6_gadrd"]
 [ext_resource type="Script" uid="uid://dpcxbaxymuk5c" path="res://scenes/environment/environment_manager.gd" id="7_5jhce"]
+[ext_resource type="PackedScene" uid="uid://ck5qry0ad6xi5" path="res://scenes/environment/tree_scene.tscn" id="8_1sh3m"]
 [ext_resource type="PackedScene" uid="uid://cwjf8k7g6u00e" path="res://scenes/environment/bush_scene.tscn" id="8_vus8m"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vus8m"]
+size = Vector2(914, 37)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5jhce"]
 size = Vector2(915, 86)
@@ -31,15 +35,37 @@ unique_name_in_owner = true
 process_mode = 2
 visible = false
 
+[node name="Trees" type="Node2D" parent="."]
+
 [node name="Player" parent="." instance=ExtResource("4_7v5ay")]
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(0, -32)
 scale = Vector2(0.99999994, 0.99999994)
 
-[node name="EnvironmentManager" type="Node2D" parent="."]
+[node name="EnvironmentManager" type="Node2D" parent="." node_paths=PackedStringArray("bush_pos_area", "tree_pos_area", "bush_nodes_container", "tree_nodes_container")]
 script = ExtResource("7_5jhce")
 bush_scene = ExtResource("8_vus8m")
+tree_scene = ExtResource("8_1sh3m")
+bush_pos_area = NodePath("BushGenerationArea/CollisionShape2D")
+tree_pos_area = NodePath("TreeGenerationArea/CollisionShape2D")
+tree_min_distance = 100
+bush_nodes_container = NodePath("../Bushes")
+tree_nodes_container = NodePath("../Trees")
+
+[node name="BushGenerationArea" type="Area2D" parent="EnvironmentManager"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnvironmentManager/BushGenerationArea"]
+position = Vector2(0, -19)
+shape = SubResource("RectangleShape2D_vus8m")
+
+[node name="TreeGenerationArea" type="Area2D" parent="EnvironmentManager"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnvironmentManager/TreeGenerationArea"]
+position = Vector2(0, -19)
+shape = SubResource("RectangleShape2D_vus8m")
+
+[node name="Bushes" type="Node2D" parent="."]
 
 [node name="Ground" type="StaticBody2D" parent="."]
 
