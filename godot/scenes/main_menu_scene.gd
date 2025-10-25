@@ -36,6 +36,4 @@ func _on_exit_button_pressed() -> void:
 	get_tree().quit()
 
 func _on_fade_overlay_on_complete_fade_out() -> void:
-	if new_game and SaveGame.has_save():
-		SaveGame.delete_save()
 	get_tree().change_scene_to_packed(next_scene)
