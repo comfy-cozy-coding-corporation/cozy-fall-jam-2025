@@ -242,7 +242,7 @@ script = ExtResource("1_dovo2")
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_smehm")
-animation = &"flap"
+animation = &"standing"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, -3)
