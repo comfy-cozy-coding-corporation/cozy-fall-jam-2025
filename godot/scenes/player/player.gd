@@ -39,6 +39,7 @@ extends CharacterBody2D
 
 @export_group("Visual")
 @export var min_running_animation_speed: float = 0.5
+@export var min_climbing_animation_speed: float = 0.5
 
 enum State {
 	STANDING,
@@ -59,6 +60,7 @@ enum PlayerAnimation {
 	RISE_INTO_FALLING,
 	STAND_INTO_FALLING,
 	FALL_INTO_GLIDING,
+	CLIMBING,
 }
 
 var state = State.STANDING
@@ -76,6 +78,7 @@ func _play_next_animation():
 
 func play(anim: PlayerAnimation):
 	animation_queue.clear()
+	sprite.rotation = 0
 	match anim:
 		PlayerAnimation.LAND_INTO_STANDING:
 			sprite.play("landing")
@@ -97,6 +100,9 @@ func play(anim: PlayerAnimation):
 		PlayerAnimation.FALL_INTO_GLIDING:
 			sprite.play("fall_to_glide")
 			animation_queue.push_back("gliding")
+		PlayerAnimation.CLIMBING:
+			sprite.rotation = PI / 2
+			sprite.play("climbing")
 
 func change_state(new_state):
 	if new_state == state: return
@@ -122,6 +128,8 @@ func change_state(new_state):
 				play(PlayerAnimation.STAND_INTO_FALLING)
 		State.GLIDING:
 			play(PlayerAnimation.FALL_INTO_GLIDING)
+		State.CLIMBING:
+			play(PlayerAnimation.CLIMBING)
 	state = new_state
 
 var facing_dir = -1
@@ -132,8 +140,11 @@ func _sprite_face(direction: float):
 	facing_dir = direction
 	sprite.flip_h = facing_dir == 1
 
-func _sprite_set_speed(speed: float, max_speed: float, min_anim_speed: float):
-	sprite.speed_scale = (abs(speed) / max_speed) * (1 - min_anim_speed) + min_anim_speed
+func _sprite_set_speed_scale(speed: float):
+	sprite.speed_scale = speed
+
+func _sprite_set_rel_speed(speed: float, max_speed: float, min_anim_speed: float):
+	_sprite_set_speed_scale((abs(speed) / max_speed) * (1 - min_anim_speed) + min_anim_speed)
 
 func _accelerate(
 	delta: float,
@@ -211,7 +222,7 @@ func _process_on_ground(delta: float):
 			if velocity.x == 0:
 				change_state(State.STANDING)
 			else:
-				_sprite_set_speed(velocity.x, max_running_speed, min_running_animation_speed)
+				_sprite_set_rel_speed(velocity.x, max_running_speed, min_running_animation_speed)
 		State.STANDING:
 			_decelerate(delta, running_deceleration)
 
@@ -305,7 +316,11 @@ func _check_climbing():
 		change_state(State.CLIMBING)
 
 func _process_climbing():
-	pass
+	velocity.x = 0
+	if velocity.y == 0:
+		_sprite_set_speed_scale(0)
+	else:
+		_sprite_set_rel_speed(abs(velocity.y), max_climbing_speed, min_climbing_animation_speed)
 
 func _physics_process(delta: float) -> void:
 	_check_climbing()
