@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://cwjf8k7g6u00e" path="res://scenes/environment/bush_scene.tscn" id="8_vus8m"]
 [ext_resource type="PackedScene" uid="uid://ca6het3qxni51" path="res://scenes/environment/parkbench_scene.tscn" id="9_1sh3m"]
 [ext_resource type="PackedScene" uid="uid://dtmh6wqihppb3" path="res://scenes/enemies/Enemy.tscn" id="10_etwux"]
+[ext_resource type="PackedScene" uid="uid://dt26ro2tlmu4k" path="res://scenes/camera.tscn" id="10_etwux"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1sh3m"]
 size = Vector2(914, 10)
@@ -49,10 +50,6 @@ visible = false
 
 [node name="Player" parent="." instance=ExtResource("4_7v5ay")]
 position = Vector2(80, -35)
-
-[node name="Camera2D" type="Camera2D" parent="Player"]
-position = Vector2(0, -32)
-scale = Vector2(0.99999994, 0.99999994)
 
 [node name="EnvironmentManager" type="Node2D" parent="." node_paths=PackedStringArray("bush_pos_area", "bush_nodes_container", "tree_pos_area", "tree_nodes_container", "bench_pos_area", "bench_nodes_container")]
 script = ExtResource("7_5jhce")
@@ -97,3 +94,7 @@ shape = SubResource("RectangleShape2D_5jhce")
 
 [node name="Enemy" parent="." instance=ExtResource("10_etwux")]
 position = Vector2(-102, -68)
+
+[node name="Camera" parent="." node_paths=PackedStringArray("target") instance=ExtResource("10_etwux")]
+position = Vector2(0, -80)
+target = NodePath("../Player")
