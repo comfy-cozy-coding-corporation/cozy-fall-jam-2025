@@ -323,7 +323,6 @@ func _check_climbing():
 func _climbing_rubber_band():
 	var ideal_global_position = climbing_on.snap_global(global_position)
 	var offs = ideal_global_position - global_position
-	print(offs)
 	if offs.is_zero_approx():
 		return
 	velocity = offs.normalized() * max(offs.length() * climbing_rubber_band_factor, climbing_rubber_band_min_speed)
