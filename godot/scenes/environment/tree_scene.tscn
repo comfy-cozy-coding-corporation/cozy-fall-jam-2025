@@ -1,17 +1,47 @@
-[gd_scene load_steps=4 format=3 uid="uid://ck5qry0ad6xi5"]
+[gd_scene load_steps=9 format=3 uid="uid://ck5qry0ad6xi5"]
 
-[ext_resource type="Texture2D" uid="uid://cib0k10y07dd3" path="res://assets/tree_placeholder.png" id="1_ncf0e"]
+[ext_resource type="Script" uid="uid://c7ca0putvnfno" path="res://scenes/environment/tree_scene.gd" id="1_qdoyn"]
 [ext_resource type="PackedScene" uid="uid://cs3l2nsfdeam7" path="res://scenes/player/climb_area.tscn" id="2_08qca"]
+[ext_resource type="Texture2D" uid="uid://bpyodnbb2p06g" path="res://assets/trees.png" id="2_yocge"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c5brt"]
+atlas = ExtResource("2_yocge")
+region = Rect2(0, 0, 80, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sicv3"]
+atlas = ExtResource("2_yocge")
+region = Rect2(80, 0, 80, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tj8yh"]
+atlas = ExtResource("2_yocge")
+region = Rect2(160, 0, 80, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_uo4j4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c5brt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sicv3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tj8yh")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_08qca"]
 size = Vector2(20, 103)
 
 [node name="TreeScene" type="Node2D"]
+script = ExtResource("1_qdoyn")
 
-[node name="TreePlaceholder" type="Sprite2D" parent="."]
-position = Vector2(0, -45.999996)
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("1_ncf0e")
+[node name="trees" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_uo4j4")
+offset = Vector2(0, -64)
 
 [node name="ClimbArea" parent="." instance=ExtResource("2_08qca")]
 
