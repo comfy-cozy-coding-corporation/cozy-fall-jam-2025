@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cik30de5gaaah"]
+[gd_scene load_steps=19 format=3 uid="uid://cik30de5gaaah"]
 
 [ext_resource type="Script" uid="uid://ovjegpk30m4h" path="res://scenes/ingame_scene.gd" id="1_objyc"]
 [ext_resource type="PackedScene" uid="uid://bkk87o2ooo6at" path="res://ui/overlays/fade_overlay.tscn" id="1_y6ebv"]
@@ -11,8 +11,6 @@
 [ext_resource type="PackedScene" uid="uid://cwjf8k7g6u00e" path="res://scenes/environment/bush_scene.tscn" id="8_vus8m"]
 [ext_resource type="PackedScene" uid="uid://ca6het3qxni51" path="res://scenes/environment/parkbench_scene.tscn" id="9_1sh3m"]
 [ext_resource type="PackedScene" uid="uid://dt26ro2tlmu4k" path="res://scenes/camera.tscn" id="10_etwux"]
-[ext_resource type="PackedScene" uid="uid://dtmh6wqihppb3" path="res://scenes/enemies/Enemy.tscn" id="11_iid22"]
-[ext_resource type="PackedScene" uid="uid://cqmchq01fchb6" path="res://scenes/treat/dropped_treat.tscn" id="12_2vs8u"]
 [ext_resource type="PackedScene" uid="uid://4y8l1aolp340" path="res://scenes/environment/basetree_scene.tscn" id="13_juwkt"]
 [ext_resource type="AudioStream" uid="uid://gshkegew3hm2" path="res://assets/void_estate.ogg" id="15_pxehq"]
 [ext_resource type="PackedScene" uid="uid://b300edjodmp4a" path="res://scenes/enemies/enemy_spawner.tscn" id="15_pxehq"]
@@ -31,9 +29,6 @@ size = Vector2(9.5, 247)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5jhce"]
 size = Vector2(2000, 18)
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2vs8u"]
-bounce = 0.6
 
 [node name="IngameScene" type="Node2D"]
 script = ExtResource("1_objyc")
@@ -132,14 +127,6 @@ shape = SubResource("RectangleShape2D_5jhce")
 [node name="Camera" parent="." node_paths=PackedStringArray("target") instance=ExtResource("10_etwux")]
 position = Vector2(0, -100)
 target = NodePath("../Player")
-
-[node name="Enemy" parent="." instance=ExtResource("11_iid22")]
-position = Vector2(257, -34)
-
-[node name="DroppedTreat" parent="." instance=ExtResource("12_2vs8u")]
-position = Vector2(12, -30)
-physics_material_override = SubResource("PhysicsMaterial_2vs8u")
-_type = 2
 
 [node name="ThrownTreats" type="Node" parent="."]
 
