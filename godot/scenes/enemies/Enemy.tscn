@@ -1,20 +1,30 @@
-[gd_scene load_steps=11 format=3 uid="uid://dtmh6wqihppb3"]
+[gd_scene load_steps=12 format=3 uid="uid://dtmh6wqihppb3"]
 
-[ext_resource type="Texture2D" uid="uid://cpgnqyjca6lhw" path="res://assets/enemy.png" id="1_hpe7p"]
 [ext_resource type="Script" uid="uid://mbvoxwebwfje" path="res://scenes/enemies/enemy.gd" id="1_k7o7a"]
-[ext_resource type="Texture2D" uid="uid://b8xd62sfa2bjn" path="res://assets/enemy_angry.png" id="2_7cewq"]
+[ext_resource type="Texture2D" uid="uid://cyyxcwg5udkqw" path="res://assets/enemy_sprite.png" id="2_73enu"]
 [ext_resource type="Script" uid="uid://d1gr6sx8pxqx5" path="res://scenes/enemies/bt_player.gd" id="3_8axbs"]
 [ext_resource type="BehaviorTree" uid="uid://csl3srkx36g8j" path="res://scenes/enemies/EnemyBehavior.tres" id="3_73enu"]
-[ext_resource type="Texture2D" uid="uid://ek5yxamc752w" path="res://assets/enemy_suspicious.png" id="4_vtlqb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jsdvy"]
 size = Vector2(26, 67)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7iym1"]
+atlas = ExtResource("2_73enu")
+region = Rect2(32, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7cewq"]
+atlas = ExtResource("2_73enu")
+region = Rect2(0, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vtlqb"]
+atlas = ExtResource("2_73enu")
+region = Rect2(16, 0, 16, 48)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_24b6r"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_7cewq")
+"texture": SubResource("AtlasTexture_7iym1")
 }],
 "loop": true,
 "name": &"angry",
@@ -22,7 +32,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_hpe7p")
+"texture": SubResource("AtlasTexture_7cewq")
 }],
 "loop": true,
 "name": &"default",
@@ -30,7 +40,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_vtlqb")
+"texture": SubResource("AtlasTexture_vtlqb")
 }],
 "loop": true,
 "name": &"suspicious",
@@ -59,8 +69,10 @@ target_position = Vector2(0, 36)
 target_position = Vector2(18, 0)
 
 [node name="sprite" type="AnimatedSprite2D" parent="body"]
-scale = Vector2(0.215, 0.215)
+position = Vector2(-0.50000024, -1.4999976)
+scale = Vector2(1.4374999, 1.4374999)
 sprite_frames = SubResource("SpriteFrames_24b6r")
+animation = &"angry"
 
 [node name="Line2D" type="Line2D" parent="body"]
 points = PackedVector2Array(0, 0, 18, 0)
