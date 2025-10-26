@@ -70,3 +70,8 @@ debug_color = Color(0.9592466, 3.85046e-07, 0.5253619, 0.41960785)
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_aulxs")
 animation = &"croissant"
+
+[node name="PickupCooldown" type="Timer" parent="."]
+wait_time = 0.2
+
+[connection signal="timeout" from="PickupCooldown" to="." method="_on_pickup_cooldown_timeout"]

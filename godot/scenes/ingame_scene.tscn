@@ -52,8 +52,9 @@ visible = false
 
 [node name="Benches" type="Node2D" parent="."]
 
-[node name="Player" parent="." instance=ExtResource("4_7v5ay")]
+[node name="Player" parent="." node_paths=PackedStringArray("thrown_treats_parent") instance=ExtResource("4_7v5ay")]
 position = Vector2(80, -35)
+thrown_treats_parent = NodePath("../ThrownTreats")
 
 [node name="EnvironmentManager" type="Node2D" parent="." node_paths=PackedStringArray("bush_pos_area", "bush_nodes_container", "tree_pos_area", "tree_nodes_container", "bench_pos_area", "bench_nodes_container")]
 script = ExtResource("7_5jhce")
@@ -107,3 +108,5 @@ position = Vector2(257, -34)
 position = Vector2(12, -30)
 physics_material_override = SubResource("PhysicsMaterial_2vs8u")
 _type = 2
+
+[node name="ThrownTreats" type="Node" parent="."]

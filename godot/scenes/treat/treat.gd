@@ -13,8 +13,10 @@ enum Type {
 @export var _type: Type = Type.MYSTERY_BALL
 
 @onready var _sprite: AnimatedSprite2D = $Sprite
+@onready var _cooldown_timer: Timer = $PickupCooldown
 
 var _displayed_type = null
+var _on_cooldown = false
 
 static func create(type: Type) -> Treat:
 	var treat: Treat = _scene.instantiate()
@@ -26,6 +28,14 @@ func get_type() -> Type:
 
 func set_type(type: Type):
 	_type = type
+
+func start_pickup_cooldown():
+	_cooldown_timer.stop()
+	_cooldown_timer.start()
+	_on_cooldown = true
+
+func is_on_cooldown() -> bool:
+	return _on_cooldown
 
 
 func _process(_delta) -> void:
@@ -42,3 +52,7 @@ func _process(_delta) -> void:
 		Type.CROISSANT:
 			self._sprite.play("croissant")
 	_displayed_type = _type
+
+
+func _on_pickup_cooldown_timeout() -> void:
+	_on_cooldown = false

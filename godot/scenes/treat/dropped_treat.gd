@@ -14,9 +14,8 @@ static func create(type: Treat.Type) -> DroppedTreat:
 	dropped_treat._type = type
 	return dropped_treat
 
-func take() -> Treat.Type:
-	queue_free()
-	return _treat.get_type()
+func start_pickup_cooldown():
+	_treat.start_pickup_cooldown()
 
 func _process(_delta: float) -> void:
 	if _treat.get_type() != _type:

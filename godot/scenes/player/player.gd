@@ -1,6 +1,8 @@
 class_name Player
 extends CharacterBody2D
 
+@export var thrown_treats_parent: Node
+
 @export_group("Movement")
 
 @export_subgroup("Running")
@@ -47,6 +49,7 @@ extends CharacterBody2D
 @export var dragging_acceleration: float = 300
 @export var dragging_turnaround_acceleration: float = 2000
 @export var dragging_deceleration: float = 1000
+@export var throwing_force: Vector2 = Vector2(8000, -2000)
 
 @export_group("Visual")
 @export var min_running_animation_speed: float = 0.5
@@ -89,6 +92,7 @@ var state = State.STANDING
 @onready var jump_input_window: Timer = $JumpInputWindow
 @onready var interaction_area: Area2D = $InteractionArea
 @onready var paws: Node2D = $Paws
+@onready var throw_origin: Node2D = $ThrowOrigin
 
 var animation_queue = []
 
@@ -179,6 +183,7 @@ func _sprite_face(direction: int):
 	facing_dir = direction
 	sprite.flip_h = facing_dir == 1
 	paws.position.x = -direction * abs(paws.position.x)
+	throw_origin.position.x = direction * abs(throw_origin.position.x)
 
 func _sprite_set_speed_scale(speed: float):
 	sprite.speed_scale = speed
@@ -367,21 +372,42 @@ func _hold_treat(type: Treat.Type):
 	var treat = Treat.create(type)
 	paws.add_child(treat)
 
+func _clear_paws():
+	for child in paws.get_children():
+		child.queue_free()
+
+func _throw_treat():
+	if thrown_treats_parent != null:
+		var dropped_treat = DroppedTreat.create(_holding_treat_type)
+		thrown_treats_parent.add_child(dropped_treat)
+		dropped_treat.global_position = throw_origin.global_position
+		var force = throwing_force
+		force.x *= facing_dir
+		dropped_treat.start_pickup_cooldown()
+		dropped_treat.apply_force(force)
+	_clear_paws()
+
 func _check_treat_pickup():
 	var treat: Treat = _get_closest_interaction(Treat)
 	if treat == null: return
 
-	if Input.is_action_pressed("interact"):
+	if !treat.is_on_cooldown() && Input.is_action_pressed("interact"):
 		_hold_treat(treat.get_type())
 		change_state(State.HOLDING)
 		treat.queue_free()
 
+func _check_throwing():
+	if Input.is_action_just_pressed("interact"):
+		_throw_treat()
+		change_state(State.STANDING)
 
 func _check_interactions():
 	match state:
 		State.STANDING, State.RUNNING, State.JUMPING, State.RISING, State.FALLING:
 			_check_climbing()
 			_check_treat_pickup()
+		State.HOLDING, State.DRAGGING:
+			_check_throwing()
 
 func _climbing_rubber_band():
 	var ideal_global_position = _climbing_on.snap_global(global_position)

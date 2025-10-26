@@ -388,6 +388,9 @@ collision_mask = 16
 position = Vector2(0, -6.5)
 shape = SubResource("RectangleShape2D_gmlin")
 
+[node name="ThrowOrigin" type="Node2D" parent="."]
+position = Vector2(10, -14)
+
 [connection signal="timeout" from="JumpInputWindow" to="." method="_on_jump_input_window_timeout"]
 [connection signal="area_entered" from="HidingArea" to="." method="_on_hiding_area_area_entered"]
 [connection signal="area_exited" from="HidingArea" to="." method="_on_hiding_area_area_exited"]
