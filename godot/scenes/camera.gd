@@ -25,11 +25,14 @@ func _get_acceleration(ideal_pos: float):
 func _get_velocity_compensation() -> float:
 	return velocity_compensation * target.velocity.x
 
+func _physics_process(_delta: float) -> void:
+	x_velocity += _get_velocity_compensation()
+
 func _process(delta: float) -> void:
 	if target == null:
 		return
 
 	var ideal_pos = _get_ideal_position()
 	var acc = _get_acceleration(ideal_pos)
-	x_velocity += acc * delta + _get_velocity_compensation()
+	x_velocity += acc * delta
 	self.global_position.x += x_velocity * delta
