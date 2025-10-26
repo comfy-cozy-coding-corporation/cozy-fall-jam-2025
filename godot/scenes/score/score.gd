@@ -6,7 +6,7 @@ static func reset():
 	_score = 0
 
 static func add_points(points: int):
-	_score += points
+	_score = max(_score + points, 0)
 
 static func get_score() -> int:
 	return _score

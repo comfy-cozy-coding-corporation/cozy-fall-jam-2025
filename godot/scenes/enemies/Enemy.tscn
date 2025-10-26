@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dtmh6wqihppb3"]
+[gd_scene load_steps=13 format=3 uid="uid://dtmh6wqihppb3"]
 
 [ext_resource type="Script" uid="uid://mbvoxwebwfje" path="res://scenes/enemies/enemy.gd" id="1_k7o7a"]
 [ext_resource type="Texture2D" uid="uid://cyyxcwg5udkqw" path="res://assets/enemy_sprite.png" id="2_73enu"]
@@ -52,6 +52,9 @@ size = Vector2(169, 64)
 
 [sub_resource type="BlackboardPlan" id="BlackboardPlan_73enu"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_73enu"]
+size = Vector2(30, 28)
+
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 4
 script = ExtResource("1_k7o7a")
@@ -90,3 +93,11 @@ position = Vector2(7, 9)
 behavior_tree = ExtResource("3_73enu")
 blackboard_plan = SubResource("BlackboardPlan_73enu")
 script = ExtResource("3_8axbs")
+
+[node name="CaptureArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 34
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CaptureArea"]
+position = Vector2(0, 19)
+shape = SubResource("RectangleShape2D_73enu")

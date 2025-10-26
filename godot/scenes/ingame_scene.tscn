@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cik30de5gaaah"]
+[gd_scene load_steps=23 format=3 uid="uid://cik30de5gaaah"]
 
 [ext_resource type="Script" uid="uid://ovjegpk30m4h" path="res://scenes/ingame_scene.gd" id="1_objyc"]
 [ext_resource type="PackedScene" uid="uid://bkk87o2ooo6at" path="res://ui/overlays/fade_overlay.tscn" id="1_y6ebv"]
@@ -29,6 +29,42 @@ size = Vector2(915, 86)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2vs8u"]
 bounce = 0.6
+
+[sub_resource type="Animation" id="Animation_pxehq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Transition/ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ilpo5"]
+resource_name = "fade"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Transition/ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(0.07966016, 1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4d8mm"]
+_data = {
+&"RESET": SubResource("Animation_pxehq"),
+&"fade": SubResource("Animation_ilpo5")
+}
 
 [node name="IngameScene" type="Node2D"]
 script = ExtResource("1_objyc")
@@ -61,9 +97,11 @@ offset_right = -4.0
 [node name="BaseTree" parent="." instance=ExtResource("13_juwkt")]
 position = Vector2(-142, 0)
 
-[node name="Player" parent="." node_paths=PackedStringArray("thrown_treats_parent") instance=ExtResource("4_7v5ay")]
-position = Vector2(80, -35)
+[node name="Player" parent="." node_paths=PackedStringArray("thrown_treats_parent", "spawn_point", "fade_animator") instance=ExtResource("4_7v5ay")]
+position = Vector2(-143, -18)
 thrown_treats_parent = NodePath("../ThrownTreats")
+spawn_point = NodePath("../SpawnPoint")
+fade_animator = NodePath("../Transition/AnimationPlayer")
 
 [node name="EnvironmentManager" type="Node2D" parent="." node_paths=PackedStringArray("bush_pos_area", "bush_nodes_container", "tree_pos_area", "tree_nodes_container", "bench_pos_area", "bench_nodes_container")]
 script = ExtResource("7_5jhce")
@@ -119,3 +157,22 @@ physics_material_override = SubResource("PhysicsMaterial_2vs8u")
 _type = 2
 
 [node name="ThrownTreats" type="Node" parent="."]
+
+[node name="SpawnPoint" type="Node2D" parent="."]
+position = Vector2(-142, -12)
+
+[node name="Transition" type="CanvasLayer" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Transition"]
+root_node = NodePath("../..")
+libraries = {
+&"": SubResource("AnimationLibrary_4d8mm")
+}
+
+[node name="ColorRect" type="ColorRect" parent="Transition"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)

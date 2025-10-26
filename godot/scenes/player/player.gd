@@ -2,7 +2,9 @@ class_name Player
 extends CharacterBody2D
 
 @export var thrown_treats_parent: Node
-
+@export var spawn_point: Node2D
+@export var fade_animator: AnimationPlayer
+@export var can_be_detected = false
 @export_group("Movement")
 
 @export_subgroup("Running")
@@ -95,6 +97,13 @@ var state = State.STANDING
 @onready var throw_origin: Node2D = $ThrowOrigin
 
 var animation_queue = []
+
+func respawn():
+	fade_animator.play("fade")
+	if state in [State.HOLDING, State.DRAGGING]:
+		_throw_treat(Vector2.ZERO)
+		change_state(State.STANDING)
+	position = spawn_point.position
 
 func _play_next_animation():
 	var next_anim = animation_queue.pop_front()
@@ -376,12 +385,11 @@ func _clear_paws():
 	for child in paws.get_children():
 		child.queue_free()
 
-func _throw_treat():
+func _throw_treat(force: Vector2):
 	if thrown_treats_parent != null:
 		var dropped_treat = DroppedTreat.create(_holding_treat_type)
 		thrown_treats_parent.add_child(dropped_treat)
 		dropped_treat.global_position = throw_origin.global_position
-		var force = throwing_force
 		force.x *= facing_dir
 		dropped_treat.start_pickup_cooldown()
 		dropped_treat.apply_force(force)
@@ -392,13 +400,14 @@ func _check_treat_pickup():
 	if treat == null: return
 
 	if !treat.is_on_cooldown() && Input.is_action_pressed("interact"):
+		can_be_detected = true
 		_hold_treat(treat.get_type())
 		change_state(State.HOLDING)
 		treat.queue_free()
 
 func _check_throwing():
 	if Input.is_action_just_pressed("interact"):
-		_throw_treat()
+		_throw_treat(throwing_force)
 		change_state(State.STANDING)
 
 func _check_interactions():
