@@ -41,17 +41,17 @@ extends CharacterBody2D
 @export var climbing_max_snap_distance: float = 1
 @export var perch_climb_boost: float = 5
 
-@export_subgroup("Carrying")
-@export var carrying_gravity: float = 800
-@export var max_carrying_speed: float = 70
-@export var carrying_acceleration: float = 300
-@export var carrying_turnaround_acceleration: float = 2000
-@export var carrying_deceleration: float = 1000
+@export_subgroup("Holding")
+@export var holding_gravity: float = 800
+@export var max_dragging_speed: float = 70
+@export var dragging_acceleration: float = 300
+@export var dragging_turnaround_acceleration: float = 2000
+@export var dragging_deceleration: float = 1000
 
 @export_group("Visual")
 @export var min_running_animation_speed: float = 0.5
 @export var min_climbing_animation_speed: float = 0.5
-@export var min_carrying_walking_animation_speed: float = 0.0
+@export var min_dragging_animation_speed: float = 0.0
 
 
 enum State {
@@ -63,8 +63,8 @@ enum State {
 	GLIDING,
 	CLIMBING,
 	PERCHED,
-	CARRYING,
-	CARRYING_WALKING
+	HOLDING,
+	DRAGGING
 }
 
 enum PlayerAnimation {
@@ -78,8 +78,8 @@ enum PlayerAnimation {
 	FALL_INTO_GLIDING,
 	CLIMBING,
 	PERCHED,
-	CARRYING,
-	CARRYING_WALKING
+	HOLDING,
+	DRAGGING,
 }
 
 var state = State.STANDING
@@ -124,10 +124,10 @@ func play(anim: PlayerAnimation):
 		PlayerAnimation.CLIMBING:
 			sprite.rotation = -PI / 2
 			sprite.play("climbing")
-		PlayerAnimation.CARRYING:
-			sprite.play("carrying")
-		PlayerAnimation.CARRYING_WALKING:
-			sprite.play("carrying_walking")
+		PlayerAnimation.HOLDING:
+			sprite.play("dragging_into_holding")
+		PlayerAnimation.DRAGGING:
+			sprite.play("dragging")
 
 func change_state(new_state: State):
 	if new_state == state: return
@@ -157,10 +157,10 @@ func change_state(new_state: State):
 			play(PlayerAnimation.CLIMBING)
 		State.PERCHED:
 			play(PlayerAnimation.PERCHED)
-		State.CARRYING:
-			play(PlayerAnimation.CARRYING)
-		State.CARRYING_WALKING:
-			play(PlayerAnimation.CARRYING_WALKING)
+		State.HOLDING:
+			play(PlayerAnimation.HOLDING)
+		State.DRAGGING:
+			play(PlayerAnimation.DRAGGING)
 	state = new_state
 
 var facing_dir: int = -1
@@ -352,7 +352,7 @@ func _get_closest_interaction(cls: Variant) -> Variant:
 	return interaction
 
 var _climbing_on: ClimbArea = null
-var _carrying_type: Treat.Type = Treat.Type.MYSTERY_BALL
+var _holding_treat_type: Treat.Type = Treat.Type.MYSTERY_BALL
 
 func _check_climbing():
 	_climbing_on = _get_closest_interaction(ClimbArea)
@@ -362,18 +362,18 @@ func _check_climbing():
 		change_state(State.CLIMBING)
 		return
 
-func _carry_treat(type: Treat.Type):
-	_carrying_type = type
+func _hold_treat(type: Treat.Type):
+	_holding_treat_type = type
 	var treat = Treat.create(type)
 	paws.add_child(treat)
 
-func _check_carrying():
+func _check_treat_pickup():
 	var treat: Treat = _get_closest_interaction(Treat)
 	if treat == null: return
 
 	if Input.is_action_pressed("interact"):
-		_carry_treat(treat.get_type())
-		change_state(State.CARRYING)
+		_hold_treat(treat.get_type())
+		change_state(State.HOLDING)
 		treat.queue_free()
 
 
@@ -381,7 +381,7 @@ func _check_interactions():
 	match state:
 		State.STANDING, State.RUNNING, State.JUMPING, State.RISING, State.FALLING:
 			_check_climbing()
-			_check_carrying()
+			_check_treat_pickup()
 
 func _climbing_rubber_band():
 	var ideal_global_position = _climbing_on.snap_global(global_position)
@@ -466,29 +466,29 @@ func _process_perched():
 		position.y += perch_climb_boost
 		change_state(State.CLIMBING)
 
-func _process_carrying(delta: float):
+func _process_holding(delta: float):
 	if is_on_floor():
 		_touched_ground()
 		velocity.y = 0
 	else:
-		velocity.y += carrying_gravity * delta
+		velocity.y += holding_gravity * delta
 	
 	var dir = _input_direction_h()
 	if dir != 0:
-		change_state(State.CARRYING_WALKING)
+		change_state(State.DRAGGING)
 		_sprite_face(dir)
 	
-	if dir != 0 && abs(velocity.x) < max_carrying_speed:
-		velocity.x = _accelerate(delta, velocity.x, facing_dir, max_carrying_speed, carrying_acceleration, carrying_turnaround_acceleration)
+	if dir != 0 && abs(velocity.x) < max_dragging_speed:
+		velocity.x = _accelerate(delta, velocity.x, facing_dir, max_dragging_speed, dragging_acceleration, dragging_turnaround_acceleration)
 	else:
-		velocity.x = _decelerate(delta, velocity.x, carrying_deceleration)
+		velocity.x = _decelerate(delta, velocity.x, dragging_deceleration)
 
 	match state:
-		State.CARRYING_WALKING:
+		State.DRAGGING:
 			if is_zero_approx(velocity.x):
-				change_state(State.CARRYING)
+				change_state(State.HOLDING)
 			else:
-				_sprite_set_rel_speed(velocity.x, max_carrying_speed, min_carrying_walking_animation_speed)
+				_sprite_set_rel_speed(velocity.x, max_dragging_speed, min_dragging_animation_speed)
 
 func _adjust_positon():
 	if (state == State.CLIMBING || state == State.PERCHED) && _climbing_on != null:
@@ -505,8 +505,8 @@ func _physics_process(delta: float) -> void:
 			_process_in_air(delta)
 		State.PERCHED:
 			_process_perched()
-		State.CARRYING, State.CARRYING_WALKING:
-			_process_carrying(delta)
+		State.HOLDING, State.DRAGGING:
+			_process_holding(delta)
 			pass
 	move_and_slide()
 	_adjust_positon()

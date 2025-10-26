@@ -1,11 +1,23 @@
-[gd_scene load_steps=43 format=3 uid="uid://bum8grp8k142r"]
+[gd_scene load_steps=45 format=3 uid="uid://bum8grp8k142r"]
 
 [ext_resource type="Script" uid="uid://doko4bbej1l7j" path="res://scenes/player/player.gd" id="1_dovo2"]
 [ext_resource type="Texture2D" uid="uid://doi0d2klrveqx" path="res://assets/player.png" id="2_gmlin"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_007i1"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_3j4b4"]
 atlas = ExtResource("2_gmlin")
-region = Rect2(0, 160, 32, 16)
+region = Rect2(0, 144, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yj68g"]
+atlas = ExtResource("2_gmlin")
+region = Rect2(32, 144, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ioxgp"]
+atlas = ExtResource("2_gmlin")
+region = Rect2(64, 144, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cnsyf"]
+atlas = ExtResource("2_gmlin")
+region = Rect2(96, 144, 32, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6cv16"]
 atlas = ExtResource("2_gmlin")
@@ -27,21 +39,9 @@ region = Rect2(96, 176, 32, 16)
 atlas = ExtResource("2_gmlin")
 region = Rect2(128, 176, 32, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_3j4b4"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_pk8ii"]
 atlas = ExtResource("2_gmlin")
-region = Rect2(0, 144, 32, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yj68g"]
-atlas = ExtResource("2_gmlin")
-region = Rect2(32, 144, 32, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ioxgp"]
-atlas = ExtResource("2_gmlin")
-region = Rect2(64, 144, 32, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_cnsyf"]
-atlas = ExtResource("2_gmlin")
-region = Rect2(96, 144, 32, 16)
+region = Rect2(0, 208, 32, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dovo2"]
 atlas = ExtResource("2_gmlin")
@@ -94,6 +94,14 @@ region = Rect2(64, 112, 32, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_myrg7"]
 atlas = ExtResource("2_gmlin")
 region = Rect2(96, 112, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_007i1"]
+atlas = ExtResource("2_gmlin")
+region = Rect2(0, 160, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tffgl"]
+atlas = ExtResource("2_gmlin")
+region = Rect2(0, 192, 32, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p47bc"]
 atlas = ExtResource("2_gmlin")
@@ -151,11 +159,20 @@ region = Rect2(0, 0, 32, 16)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_007i1")
+"texture": SubResource("AtlasTexture_3j4b4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yj68g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ioxgp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cnsyf")
 }],
 "loop": true,
-"name": &"carrying",
-"speed": 5.0
+"name": &"climbing",
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -174,25 +191,16 @@ animations = [{
 "texture": SubResource("AtlasTexture_iqsei")
 }],
 "loop": true,
-"name": &"carrying_walking",
+"name": &"dragging",
 "speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_3j4b4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_yj68g")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ioxgp")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_cnsyf")
+"texture": SubResource("AtlasTexture_pk8ii")
 }],
 "loop": true,
-"name": &"climbing",
-"speed": 10.0
+"name": &"dragging_into_holding",
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -252,6 +260,22 @@ animations = [{
 "loop": true,
 "name": &"gliding",
 "speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_007i1")
+}],
+"loop": true,
+"name": &"holding",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tffgl")
+}],
+"loop": false,
+"name": &"holding_into_dragging",
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -338,8 +362,7 @@ position = Vector2(-5.735, -8)
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_smehm")
-animation = &"carrying_walking"
-frame_progress = 0.07965577
+animation = &"dragging_into_holding"
 
 [node name="CollisionBox" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, -3)
