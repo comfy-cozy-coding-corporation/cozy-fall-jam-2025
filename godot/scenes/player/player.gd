@@ -41,6 +41,13 @@ extends CharacterBody2D
 @export var climbing_max_snap_distance: float = 1
 @export var perch_climb_boost: float = 5
 
+@export_subgroup("Carrying")
+@export var carrying_gravity: float = 800
+@export var max_carrying_speed: float = 100
+@export var carrying_acceleration: float = 300
+@export var carrying_turnaround_acceleration: float = 2000
+@export var carrying_deceleration: float = 1000
+
 @export_group("Visual")
 @export var min_running_animation_speed: float = 0.5
 @export var min_climbing_animation_speed: float = 0.5
@@ -54,7 +61,9 @@ enum State {
 	FALLING,
 	GLIDING,
 	CLIMBING,
-	PERCHED
+	PERCHED,
+	CARRYING,
+	CARRYING_WALKING
 }
 
 enum PlayerAnimation {
@@ -67,7 +76,9 @@ enum PlayerAnimation {
 	STAND_INTO_FALLING,
 	FALL_INTO_GLIDING,
 	CLIMBING,
-	PERCHED
+	PERCHED,
+	CARRYING,
+	CARRYING_WALKING
 }
 
 var state = State.STANDING
@@ -76,6 +87,7 @@ var state = State.STANDING
 @onready var sprite: AnimatedSprite2D = $PlayerSprite
 @onready var jump_input_window: Timer = $JumpInputWindow
 @onready var interaction_area: Area2D = $InteractionArea
+@onready var paws: Node2D = $Paws
 
 var animation_queue = []
 
@@ -111,6 +123,10 @@ func play(anim: PlayerAnimation):
 		PlayerAnimation.CLIMBING:
 			sprite.rotation = -PI / 2
 			sprite.play("climbing")
+		PlayerAnimation.CARRYING:
+			sprite.play("carrying")
+		PlayerAnimation.CARRYING_WALKING:
+			sprite.play("carrying_walking")
 
 func change_state(new_state: State):
 	if new_state == state: return
@@ -140,6 +156,10 @@ func change_state(new_state: State):
 			play(PlayerAnimation.CLIMBING)
 		State.PERCHED:
 			play(PlayerAnimation.PERCHED)
+		State.CARRYING:
+			play(PlayerAnimation.CARRYING)
+		State.CARRYING_WALKING:
+			play(PlayerAnimation.CARRYING_WALKING)
 	state = new_state
 
 var facing_dir: int = -1
@@ -228,7 +248,6 @@ func _touched_ground():
 var glides_available = 0
 
 func _process_on_ground(delta: float):
-	_check_climbing()
 	_touched_ground()
 
 	if !is_on_floor():
@@ -282,8 +301,6 @@ func _on_jump_input_window_timeout():
 		change_state(State.RISING)
 
 func _process_in_air(delta: float):
-	_check_climbing()
-
 	if state == State.JUMPING && !Input.is_action_pressed("jump"):
 		change_state(State.RISING)
 
@@ -317,39 +334,62 @@ func _process_in_air(delta: float):
 			velocity.x = _accelerate(delta, velocity.x, dir, max_air_control_speed, air_control_accceleration, air_control_accceleration)
 			_sprite_face(round(sign(velocity.x)))
 
-func _get_climb_area() -> ClimbArea:
-	var climbing_area: ClimbArea = null
+func _get_closest_interaction(cls: Variant) -> Variant:
+	var interaction: Variant = null
 	var closest_distance = INF
 	var areas: Array[Area2D] = interaction_area.get_overlapping_areas()
 	for area in areas:
-		if !(area is ClimbArea):
+		if !is_instance_of(area, cls):
 			continue
 
 		var dist = area.position.distance_squared_to(self.position)
 		if dist < closest_distance:
 			closest_distance = dist
-			climbing_area = area
+			interaction = area
 	
-	return climbing_area
+	return interaction
 
-var climbing_on: ClimbArea = null
+var _climbing_on: ClimbArea = null
+var _carrying_type: Treat.Type = Treat.Type.MYSTERY_BALL
 
 func _check_climbing():
-	climbing_on = _get_climb_area()
-	if climbing_on == null: return
+	_climbing_on = _get_closest_interaction(ClimbArea)
+	if _climbing_on == null: return
 
 	if Input.is_action_pressed("move_up") || !is_on_floor() && Input.is_action_pressed("move_down"):
 		change_state(State.CLIMBING)
+		return
+
+func _carry_treat(type: Treat.Type):
+	_carrying_type = type
+	var treat = Treat.create(type)
+	paws.add_child(treat)
+
+func _check_carrying():
+	var treat: Treat = _get_closest_interaction(Treat)
+	if treat == null: return
+
+	if Input.is_action_pressed("interact"):
+		_carry_treat(treat.get_type())
+		change_state(State.CARRYING)
+		treat.queue_free()
+
+
+func _check_interactions():
+	match state:
+		State.STANDING, State.RUNNING, State.JUMPING, State.RISING, State.FALLING:
+			_check_climbing()
+			_check_carrying()
 
 func _climbing_rubber_band():
-	var ideal_global_position = climbing_on.snap_global(global_position)
+	var ideal_global_position = _climbing_on.snap_global(global_position)
 	var offs = ideal_global_position - global_position
 	if offs.is_zero_approx():
 		return
 	velocity = offs.normalized() * max(offs.length() * climbing_rubber_band_factor, climbing_rubber_band_min_speed)
 
 func _climbing_snap_position():
-	var ideal_global_position = climbing_on.snap_global(global_position)
+	var ideal_global_position = _climbing_on.snap_global(global_position)
 	if abs(global_position.x - ideal_global_position.x) < climbing_max_snap_distance:
 		global_position.x = ideal_global_position.x
 	if abs(global_position.y - ideal_global_position.y) < climbing_max_snap_distance:
@@ -368,14 +408,17 @@ func _remember_facing_dir():
 
 func _process_climbing(delta):
 	_remember_facing_dir()
+	var new_climbing_on = _get_closest_interaction(ClimbArea)
 
-	if _get_climb_area() == null:
+	if new_climbing_on == null:
 		_reset_facing_dir_after_climbing()
 		if velocity.y <= 0 && Input.is_action_pressed("move_up"):
 			change_state(State.PERCHED)
 		else:
 			change_state(State.FALLING)
 		return
+	else:
+		_climbing_on = new_climbing_on
 
 	_touched_ground()
 	velocity.x = 0
@@ -422,10 +465,11 @@ func _process_perched():
 		change_state(State.CLIMBING)
 
 func _adjust_positon():
-	if (state == State.CLIMBING || state == State.PERCHED) && climbing_on != null:
+	if (state == State.CLIMBING || state == State.PERCHED) && _climbing_on != null:
 		_climbing_snap_position()
 
 func _physics_process(delta: float) -> void:
+	_check_interactions()
 	match state:
 		State.CLIMBING:
 			_process_climbing(delta)
@@ -435,6 +479,8 @@ func _physics_process(delta: float) -> void:
 			_process_in_air(delta)
 		State.PERCHED:
 			_process_perched()
+		State.CARRYING:
+			pass
 	move_and_slide()
 	_adjust_positon()
 

@@ -1,5 +1,5 @@
 class_name Treat
-extends AnimatedSprite2D
+extends Area2D
 
 const _scene = preload("res://scenes/treat/treat.tscn")
 
@@ -8,6 +8,8 @@ enum Type {
 }
 
 @export var _type: Type = Type.MYSTERY_BALL
+
+@onready var _sprite: AnimatedSprite2D = $Sprite
 
 var _displayed_type = null
 
@@ -28,6 +30,6 @@ func _process(_delta) -> void:
 		return
 	match self._type:
 		Type.MYSTERY_BALL:
-			self.play("mystery-ball")
+			self._sprite.play("mystery-ball")
 			self.rotation = randf_range(0, TAU)
 	_displayed_type = _type

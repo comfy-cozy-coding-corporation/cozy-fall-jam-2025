@@ -21,3 +21,6 @@ func take() -> Treat.Type:
 func _process(_delta: float) -> void:
 	if _treat.get_type() != _type:
 		_treat.set_type(_type)
+
+func _on_treat_tree_exiting():
+	queue_free()

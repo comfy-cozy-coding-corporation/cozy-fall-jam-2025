@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dec3gt0k32jwg"]
+[gd_scene load_steps=6 format=3 uid="uid://dec3gt0k32jwg"]
 
 [ext_resource type="Texture2D" uid="uid://cdpcbtdkjnf2n" path="res://assets/mystery-ball.png" id="1_ynyod"]
 [ext_resource type="Script" uid="uid://us2f3tga4tb" path="res://scenes/treat/treat.gd" id="2_fjsvs"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_aqkn0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fjsvs"]
 atlas = ExtResource("1_ynyod")
@@ -18,7 +20,15 @@ animations = [{
 "speed": 0.0
 }]
 
-[node name="Treat" type="AnimatedSprite2D"]
+[node name="Treat" type="Area2D"]
+collision_layer = 128
+collision_mask = 0
+script = ExtResource("2_fjsvs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_aqkn0")
+debug_color = Color(0.9592466, 3.85046e-07, 0.5253619, 0.41960785)
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_aulxs")
 animation = &"mystery-ball"
-script = ExtResource("2_fjsvs")

@@ -1,7 +1,31 @@
-[gd_scene load_steps=37 format=3 uid="uid://bum8grp8k142r"]
+[gd_scene load_steps=43 format=3 uid="uid://bum8grp8k142r"]
 
 [ext_resource type="Script" uid="uid://doko4bbej1l7j" path="res://scenes/player/player.gd" id="1_dovo2"]
 [ext_resource type="Texture2D" uid="uid://doi0d2klrveqx" path="res://assets/player.png" id="2_gmlin"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_007i1"]
+atlas = ExtResource("2_gmlin")
+region = Rect2(0, 160, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6cv16"]
+atlas = ExtResource("2_gmlin")
+region = Rect2(0, 176, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j4nxn"]
+atlas = ExtResource("2_gmlin")
+region = Rect2(32, 176, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_28m0y"]
+atlas = ExtResource("2_gmlin")
+region = Rect2(64, 176, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uniwh"]
+atlas = ExtResource("2_gmlin")
+region = Rect2(96, 176, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iqsei"]
+atlas = ExtResource("2_gmlin")
+region = Rect2(128, 176, 32, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3j4b4"]
 atlas = ExtResource("2_gmlin")
@@ -125,6 +149,34 @@ region = Rect2(0, 0, 32, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_smehm"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_007i1")
+}],
+"loop": true,
+"name": &"carrying",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6cv16")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j4nxn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_28m0y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uniwh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iqsei")
+}],
+"loop": true,
+"name": &"carrying_walking",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_3j4b4")
@@ -279,11 +331,49 @@ size = Vector2(18, 13)
 collision_layer = 2
 collision_mask = 25
 script = ExtResource("1_dovo2")
+max_running_speed = null
+running_acceleration = null
+running_turnaround_acceleration = null
+running_deceleration = null
+jump_velocity = null
+jumping_gravity = null
+jump_max_hold_time = null
+falling_gravity = null
+max_air_control_speed = null
+air_control_accceleration = null
+glides_per_jump = null
+max_gliding_speed = null
+gliding_gravity = null
+gliding_air_resistance = null
+gliding_acceleration = null
+gliding_turnaround_acceleration = null
+flap_velocity = null
+flap_forward_velocity = null
+max_climbing_speed = null
+climbing_acceleration = null
+climbing_turnaround_acceleration = null
+climbing_deceleration = null
+climbing_rubber_band_factor = null
+climbing_rubber_band_min_speed = null
+climbing_max_snap_distance = null
+perch_climb_boost = null
+carrying_gravity = null
+max_carrying_speed = null
+carrying_acceleration = null
+carrying_turnaround_acceleration = null
+carrying_deceleration = null
+min_running_animation_speed = null
+min_climbing_animation_speed = null
+hiding = null
+
+[node name="Paws" type="Node2D" parent="."]
+position = Vector2(-5, -16)
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_smehm")
-animation = &"running"
+animation = &"carrying_walking"
+frame_progress = 0.07965577
 
 [node name="CollisionBox" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, -3)
