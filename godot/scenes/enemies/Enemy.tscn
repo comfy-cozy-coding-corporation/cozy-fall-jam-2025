@@ -74,11 +74,6 @@ scale = Vector2(1.4374999, 1.4374999)
 sprite_frames = SubResource("SpriteFrames_24b6r")
 animation = &"angry"
 
-[node name="Line2D" type="Line2D" parent="body"]
-points = PackedVector2Array(0, 0, 18, 0)
-width = 1.725
-default_color = Color(0, 0, 0, 1)
-
 [node name="SightArea" type="Area2D" parent="body"]
 collision_layer = 0
 collision_mask = 2
@@ -89,7 +84,7 @@ position = Vector2(43.5, 1)
 shape = SubResource("RectangleShape2D_7cewq")
 
 [node name="TreatHolder" type="Node2D" parent="body"]
-position = Vector2(18, 0)
+position = Vector2(7, 9)
 
 [node name="BTPlayer" type="BTPlayer" parent="."]
 behavior_tree = ExtResource("3_73enu")
