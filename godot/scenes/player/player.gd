@@ -22,7 +22,7 @@ extends CharacterBody2D
 @export_subgroup("Gliding")
 @export var glides_per_jump: int = 1
 @export var max_gliding_speed: float = 300
-@export var gliding_gravity: float = 200
+@export var gliding_gravity: float = 175
 @export var gliding_air_resistance: float = 2.0
 @export var gliding_acceleration: float = 300
 @export var gliding_turnaround_acceleration: float = 900
