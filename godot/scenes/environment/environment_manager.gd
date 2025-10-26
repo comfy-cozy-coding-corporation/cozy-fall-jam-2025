@@ -35,6 +35,16 @@ func _ready() -> void:
 	
 	var amount_benches = randi_range(min_benches, max_benches)
 	generate_random_structure(bench_scene, bench_pos_area, amount_benches, bench_min_distance, bench_nodes_container, "Bench-")
+
+func random_position_in(valid_positions: CollisionShape2D) -> Vector2:
+		var rect = valid_positions.shape.get_rect()
+		var start_pos = self.global_position + rect.position
+		var end_pos = start_pos + rect.size
+		return Vector2(
+			randf_range(start_pos.x, end_pos.x),
+			randf_range(start_pos.y, end_pos.y)
+		)
+
 	
 func generate_random_structure(
 	scene: PackedScene,
@@ -47,26 +57,19 @@ func generate_random_structure(
 	var new_structure_positions: PackedVector2Array = [Vector2.ZERO]
 	
 	# Emergency exit if there's not enough space to distance out more objects just stop doing so
-	var placing_iterations: int = 0
 	for i in range(amount):
-		if placing_iterations == 25:
-			return
-		var new_structure_pos = Vector2(
-			randf_range(valid_positions.shape.get_rect().position.x, valid_positions.shape.get_rect().position.x + valid_positions.shape.get_rect().size.x), 
-			randf_range(valid_positions.shape.get_rect().position.y, valid_positions.shape.get_rect().position.y + valid_positions.shape.get_rect().size.y)
-		)
+		var placing_iterations: int = 0
+		var new_structure_pos = random_position_in(valid_positions)
 		while true:
+			if placing_iterations == 25: break
+			placing_iterations += 1
 			var position_adjusted = false
 			for structure in new_structure_positions:
 				if abs(new_structure_pos.x - structure.x) < min_distance:
-					new_structure_pos = Vector2(
-						randf_range(valid_positions.shape.get_rect().position.x, valid_positions.shape.get_rect().position.x + valid_positions.shape.get_rect().size.x), 
-						randf_range(valid_positions.shape.get_rect().position.y, valid_positions.shape.get_rect().position.y + valid_positions.shape.get_rect().size.y)
-					)
+					new_structure_pos = random_position_in(valid_positions)
 					position_adjusted = true
 			if not position_adjusted:
 				break
-		placing_iterations += 1
 		var structure_instance: Node2D = scene.instantiate()
 		structure_instance.name = node_name + str(i)
 		parent_container.add_child(structure_instance)
