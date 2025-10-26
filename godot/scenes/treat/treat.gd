@@ -4,7 +4,10 @@ extends Area2D
 const _scene = preload("res://scenes/treat/treat.tscn")
 
 enum Type {
-	MYSTERY_BALL
+	MYSTERY_BALL,
+	CHOCOLATE,
+	LOLLYPOP,
+	CROISSANT
 }
 
 @export var _type: Type = Type.MYSTERY_BALL
@@ -32,4 +35,10 @@ func _process(_delta) -> void:
 		Type.MYSTERY_BALL:
 			self._sprite.play("mystery-ball")
 			self.rotation = randf_range(0, TAU)
+		Type.CHOCOLATE:
+			self._sprite.play("chocolate")
+		Type.LOLLYPOP:
+			self._sprite.play("lollypop")
+		Type.CROISSANT:
+			self._sprite.play("croissant")
 	_displayed_type = _type
