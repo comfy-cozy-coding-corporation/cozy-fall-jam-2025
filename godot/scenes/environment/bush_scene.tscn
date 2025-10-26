@@ -50,6 +50,7 @@ animations = [{
 size = Vector2(27, 11)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D"]
+z_index = 2
 sprite_frames = SubResource("SpriteFrames_kt03l")
 script = ExtResource("2_nt5sc")
 
