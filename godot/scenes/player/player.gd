@@ -403,7 +403,7 @@ func _check_throwing():
 
 func _check_interactions():
 	match state:
-		State.STANDING, State.RUNNING, State.JUMPING, State.RISING, State.FALLING:
+		State.STANDING, State.RUNNING, State.JUMPING, State.RISING, State.FALLING, State.GLIDING:
 			_check_climbing()
 			_check_treat_pickup()
 		State.HOLDING, State.DRAGGING:
