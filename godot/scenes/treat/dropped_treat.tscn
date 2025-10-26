@@ -9,7 +9,7 @@ radius = 7.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_ka30n"]
 
 [node name="DroppedTreat" type="RigidBody2D"]
-collision_layer = 2
+collision_layer = 0
 collision_mask = 3
 script = ExtResource("1_ka30n")
 
