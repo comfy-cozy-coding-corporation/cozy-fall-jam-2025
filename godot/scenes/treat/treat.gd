@@ -25,7 +25,7 @@ static func create(type: Type) -> Treat:
 
 static func points_for_type(type: Type) -> int:
 	match type:
-		Type.MYSTERY_BALL: return 99999
+		Type.MYSTERY_BALL: return 10000
 		Type.CROISSANT: return 1000
 		Type.LOLLYPOP: return 2000
 		Type.CHOCOLATE: return 3000

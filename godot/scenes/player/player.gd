@@ -102,8 +102,8 @@ func respawn():
 	fade_animator.play("fade")
 	if state in [State.HOLDING, State.DRAGGING]:
 		_throw_treat(Vector2.ZERO)
-		change_state(State.STANDING)
-	position = spawn_point.position
+	global_position = spawn_point.global_position
+	force_climb()
 
 func _play_next_animation():
 	var next_anim = animation_queue.pop_front()
@@ -369,6 +369,11 @@ func _get_closest_interaction(cls: Variant) -> Variant:
 
 var _climbing_on: ClimbArea = null
 var _holding_treat_type: Treat.Type = Treat.Type.MYSTERY_BALL
+
+func force_climb():
+	_climbing_on = _get_closest_interaction(ClimbArea)
+	if _climbing_on == null: return
+	change_state(State.CLIMBING)
 
 func _check_climbing():
 	_climbing_on = _get_closest_interaction(ClimbArea)

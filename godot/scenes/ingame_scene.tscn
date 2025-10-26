@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bkk87o2ooo6at" path="res://ui/overlays/fade_overlay.tscn" id="1_y6ebv"]
 [ext_resource type="Texture2D" uid="uid://3ra1cte85ypi" path="res://assets/background.png" id="2_ilpo5"]
 [ext_resource type="PackedScene" uid="uid://jyv4g54adkmo" path="res://ui/overlays/pause_overlay.tscn" id="3_8o178"]
-[ext_resource type="Script" uid="uid://cfa0vt6qu2e65" path="res://scenes/ui.gd" id="3_ilpo5"]
+[ext_resource type="Script" path="res://scenes/ui.gd" id="3_ilpo5"]
 [ext_resource type="PackedScene" uid="uid://bum8grp8k142r" path="res://scenes/player/player.tscn" id="4_7v5ay"]
 [ext_resource type="PackedScene" uid="uid://bg2va567u5nln" path="res://scenes/score/score_display.tscn" id="5_ilpo5"]
 [ext_resource type="Script" uid="uid://dpcxbaxymuk5c" path="res://scenes/environment/environment_manager.gd" id="7_5jhce"]
@@ -172,7 +172,7 @@ target = NodePath("../Player")
 [node name="ThrownTreats" type="Node" parent="."]
 
 [node name="SpawnPoint" type="Node2D" parent="."]
-position = Vector2(-142, -12)
+position = Vector2(-146, -134)
 
 [node name="Transition" type="CanvasLayer" parent="."]
 

@@ -21,9 +21,16 @@ var has_treat = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var treat = Treat.create(randi() % len(Treat.Type))
-	$body/TreatHolder.add_child(treat)
-	has_treat = true
+	if randi() % 100 > 30:
+		var treat_type
+		var val = randf_range(0, 100)
+		if val <= 0.1:
+			treat_type = Treat.Type.MYSTERY_BALL
+		else:
+			treat_type = randi_range(1, len(Treat.Type)-1)
+		var treat = Treat.create(treat_type)
+		$body/TreatHolder.add_child(treat)
+		has_treat = true
 	
 func _process(_delta: float) -> void:
 	$body.scale.x = facing_direction
