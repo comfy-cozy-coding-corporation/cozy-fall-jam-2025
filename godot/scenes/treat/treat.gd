@@ -5,9 +5,9 @@ const _scene = preload("res://scenes/treat/treat.tscn")
 
 enum Type {
 	MYSTERY_BALL,
-	CHOCOLATE,
+	CROISSANT,
 	LOLLYPOP,
-	CROISSANT
+	CHOCOLATE,
 }
 
 @export var _type: Type = Type.MYSTERY_BALL
@@ -23,11 +23,22 @@ static func create(type: Type) -> Treat:
 	treat.set_type(type)
 	return treat
 
+static func points_for_type(type: Type) -> int:
+	match type:
+		Type.MYSTERY_BALL: return 99999
+		Type.CROISSANT: return 1000
+		Type.LOLLYPOP: return 2000
+		Type.CHOCOLATE: return 3000
+	return 0
+
 func get_type() -> Type:
 	return _type
 
 func set_type(type: Type):
 	_type = type
+
+func get_points() -> int:
+	return points_for_type(get_type())
 
 func start_pickup_cooldown():
 	_cooldown_timer.stop()
