@@ -3,7 +3,7 @@ extends Camera2D
 @export var target: Player
 @export var min_dist: float = 70
 @export var lookahead_offset: float = 100
-@export var spring_constant = 0.8
+@export var spring_constant = 0.4
 @export var velocity_compensation: float = 0.11
 @export var damping_factor = 8.0
 
