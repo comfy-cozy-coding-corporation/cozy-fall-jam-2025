@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cik30de5gaaah"]
+[gd_scene load_steps=22 format=3 uid="uid://cik30de5gaaah"]
 
 [ext_resource type="Script" uid="uid://ovjegpk30m4h" path="res://scenes/ingame_scene.gd" id="1_objyc"]
 [ext_resource type="PackedScene" uid="uid://bkk87o2ooo6at" path="res://ui/overlays/fade_overlay.tscn" id="1_y6ebv"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://dtmh6wqihppb3" path="res://scenes/enemies/Enemy.tscn" id="11_iid22"]
 [ext_resource type="PackedScene" uid="uid://cqmchq01fchb6" path="res://scenes/treat/dropped_treat.tscn" id="12_2vs8u"]
 [ext_resource type="PackedScene" uid="uid://4y8l1aolp340" path="res://scenes/environment/basetree_scene.tscn" id="13_juwkt"]
+[ext_resource type="AudioStream" uid="uid://gshkegew3hm2" path="res://assets/void_estate.ogg" id="15_pxehq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pxehq"]
 size = Vector2(1853, 0)
@@ -140,3 +141,8 @@ physics_material_override = SubResource("PhysicsMaterial_2vs8u")
 _type = 2
 
 [node name="ThrownTreats" type="Node" parent="."]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("15_pxehq")
+volume_db = -10.0
+autoplay = true

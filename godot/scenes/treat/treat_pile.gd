@@ -8,5 +8,6 @@ func _on_body_entered(body: Node2D) -> void:
 	var treat: DroppedTreat = body
 	var points = treat.get_points()
 	Score.add_points(points)
-
+	$sfx_score.play()
+	
 	treat.queue_free()

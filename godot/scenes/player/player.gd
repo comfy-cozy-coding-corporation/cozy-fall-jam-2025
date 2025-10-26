@@ -248,6 +248,7 @@ func _ground_jump():
 		_jump(jump_velocity, max_running_speed)
 		jump_input_window.stop()
 		jump_input_window.start(jump_max_hold_time)
+		$sfx_jump.play()
 
 func _touched_ground():
 	glides_available = glides_per_jump
@@ -302,6 +303,7 @@ func _flap():
 		velocity.x = sign(velocity.x) * min(abs(velocity.x), flap_forward_velocity)
 		play(PlayerAnimation.FLAP)
 		change_state(State.RISING)
+		$sfx_flap.play()
 
 func _on_jump_input_window_timeout():
 	if state == State.JUMPING:

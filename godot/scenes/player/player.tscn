@@ -1,7 +1,9 @@
-[gd_scene load_steps=45 format=3 uid="uid://bum8grp8k142r"]
+[gd_scene load_steps=47 format=3 uid="uid://bum8grp8k142r"]
 
 [ext_resource type="Script" uid="uid://doko4bbej1l7j" path="res://scenes/player/player.gd" id="1_dovo2"]
 [ext_resource type="Texture2D" uid="uid://doi0d2klrveqx" path="res://assets/player.png" id="2_gmlin"]
+[ext_resource type="AudioStream" uid="uid://btjuja0vpwgjb" path="res://assets/jump.wav" id="3_gmlin"]
+[ext_resource type="AudioStream" uid="uid://cxpm43rc8440e" path="res://assets/flap.wav" id="4_lvxji"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3j4b4"]
 atlas = ExtResource("2_gmlin")
@@ -390,6 +392,12 @@ shape = SubResource("RectangleShape2D_gmlin")
 
 [node name="ThrowOrigin" type="Node2D" parent="."]
 position = Vector2(10, -14)
+
+[node name="sfx_jump" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_gmlin")
+
+[node name="sfx_flap" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_lvxji")
 
 [connection signal="timeout" from="JumpInputWindow" to="." method="_on_jump_input_window_timeout"]
 [connection signal="area_entered" from="HidingArea" to="." method="_on_hiding_area_area_entered"]
