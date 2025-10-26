@@ -5,6 +5,9 @@ extends Node2D
 @export var position_variation: float = 50
 
 func _ready() -> void:
+	for child in get_children():
+		child.queue_free()
+
 	var positions: Array[float]
 	var start = -enemy_max_distance
 	var range_width = 2 * enemy_max_distance
@@ -13,8 +16,8 @@ func _ready() -> void:
 		positions.push_back(start + (i as float) / (number_of_enemies - 1) * range_width)
 
 	for i in range(positions.size()):
-		positions.insert(i, positions[i] + randf_range(-position_variation, position_variation))
-	
+		positions[i] = positions[i] + randf_range(-position_variation, position_variation)
+
 	for pos in positions:
 		var enemy = Enemy.create()
 		enemy.position.x = pos
