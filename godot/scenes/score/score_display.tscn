@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://bg2va567u5nln"]
+
+[ext_resource type="Script" uid="uid://cti2qcxdoh8ji" path="res://scenes/score/score_display.gd" id="1_5h1pd"]
+
+[node name="ScoreDisplay" type="Label"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Score: 0"
+script = ExtResource("1_5h1pd")

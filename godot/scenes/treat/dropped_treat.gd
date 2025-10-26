@@ -17,6 +17,9 @@ static func create(type: Treat.Type) -> DroppedTreat:
 func start_pickup_cooldown():
 	_treat.start_pickup_cooldown()
 
+func get_points() -> int:
+	return _treat.get_points()
+
 func _process(_delta: float) -> void:
 	if _treat.get_type() != _type:
 		_treat.set_type(_type)
