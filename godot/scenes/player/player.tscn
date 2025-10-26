@@ -331,43 +331,9 @@ size = Vector2(18, 13)
 collision_layer = 2
 collision_mask = 25
 script = ExtResource("1_dovo2")
-max_running_speed = null
-running_acceleration = null
-running_turnaround_acceleration = null
-running_deceleration = null
-jump_velocity = null
-jumping_gravity = null
-jump_max_hold_time = null
-falling_gravity = null
-max_air_control_speed = null
-air_control_accceleration = null
-glides_per_jump = null
-max_gliding_speed = null
-gliding_gravity = null
-gliding_air_resistance = null
-gliding_acceleration = null
-gliding_turnaround_acceleration = null
-flap_velocity = null
-flap_forward_velocity = null
-max_climbing_speed = null
-climbing_acceleration = null
-climbing_turnaround_acceleration = null
-climbing_deceleration = null
-climbing_rubber_band_factor = null
-climbing_rubber_band_min_speed = null
-climbing_max_snap_distance = null
-perch_climb_boost = null
-carrying_gravity = null
-max_carrying_speed = null
-carrying_acceleration = null
-carrying_turnaround_acceleration = null
-carrying_deceleration = null
-min_running_animation_speed = null
-min_climbing_animation_speed = null
-hiding = null
 
 [node name="Paws" type="Node2D" parent="."]
-position = Vector2(-5, -16)
+position = Vector2(-3, -15)
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -8)

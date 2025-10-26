@@ -43,7 +43,7 @@ extends CharacterBody2D
 
 @export_subgroup("Carrying")
 @export var carrying_gravity: float = 800
-@export var max_carrying_speed: float = 100
+@export var max_carrying_speed: float = 70
 @export var carrying_acceleration: float = 300
 @export var carrying_turnaround_acceleration: float = 2000
 @export var carrying_deceleration: float = 1000
@@ -51,6 +51,7 @@ extends CharacterBody2D
 @export_group("Visual")
 @export var min_running_animation_speed: float = 0.5
 @export var min_climbing_animation_speed: float = 0.5
+@export var min_carrying_walking_animation_speed: float = 0.0
 
 
 enum State {
@@ -177,6 +178,7 @@ func _sprite_face(direction: int):
 		return
 	facing_dir = direction
 	sprite.flip_h = facing_dir == 1
+	paws.position.x = -direction * abs(paws.position.x)
 
 func _sprite_set_speed_scale(speed: float):
 	sprite.speed_scale = speed
@@ -268,7 +270,7 @@ func _process_on_ground(delta: float):
 
 	match state:
 		State.RUNNING:
-			if velocity.x == 0:
+			if is_zero_approx(velocity.x):
 				change_state(State.STANDING)
 			else:
 				_sprite_set_rel_speed(velocity.x, max_running_speed, min_running_animation_speed)
@@ -464,6 +466,30 @@ func _process_perched():
 		position.y += perch_climb_boost
 		change_state(State.CLIMBING)
 
+func _process_carrying(delta: float):
+	if is_on_floor():
+		_touched_ground()
+		velocity.y = 0
+	else:
+		velocity.y += carrying_gravity * delta
+	
+	var dir = _input_direction_h()
+	if dir != 0:
+		change_state(State.CARRYING_WALKING)
+		_sprite_face(dir)
+	
+	if dir != 0 && abs(velocity.x) < max_carrying_speed:
+		velocity.x = _accelerate(delta, velocity.x, facing_dir, max_carrying_speed, carrying_acceleration, carrying_turnaround_acceleration)
+	else:
+		velocity.x = _decelerate(delta, velocity.x, carrying_deceleration)
+
+	match state:
+		State.CARRYING_WALKING:
+			if is_zero_approx(velocity.x):
+				change_state(State.CARRYING)
+			else:
+				_sprite_set_rel_speed(velocity.x, max_carrying_speed, min_carrying_walking_animation_speed)
+
 func _adjust_positon():
 	if (state == State.CLIMBING || state == State.PERCHED) && _climbing_on != null:
 		_climbing_snap_position()
@@ -479,7 +505,8 @@ func _physics_process(delta: float) -> void:
 			_process_in_air(delta)
 		State.PERCHED:
 			_process_perched()
-		State.CARRYING:
+		State.CARRYING, State.CARRYING_WALKING:
+			_process_carrying(delta)
 			pass
 	move_and_slide()
 	_adjust_positon()
