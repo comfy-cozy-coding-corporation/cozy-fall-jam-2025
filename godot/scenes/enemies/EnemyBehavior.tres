@@ -2,16 +2,16 @@
 
 [ext_resource type="Script" uid="uid://estam0hqswbd" path="res://ai/tasks/can_see_player.gd" id="1_4u2yy"]
 [ext_resource type="Script" uid="uid://bkekkv47fvwtm" path="res://ai/tasks/set_enemy_anger.gd" id="1_bjilo"]
-[ext_resource type="Script" uid="uid://1stxcsa86mft" path="res://ai/tasks/can_capture_player.gd" id="1_kjkg0"]
-[ext_resource type="Script" uid="uid://d314yllgm6fy3" path="res://ai/tasks/capture_player.gd" id="2_23i14"]
+[ext_resource type="Script" path="res://ai/tasks/can_capture_player.gd" id="1_kjkg0"]
+[ext_resource type="Script" path="res://ai/tasks/capture_player.gd" id="2_23i14"]
 [ext_resource type="Script" uid="uid://mt8yeaq05xai" path="res://ai/tasks/face_detected_player.gd" id="2_bjilo"]
 [ext_resource type="Script" uid="uid://dkvswv00jikl3" path="res://ai/tasks/walk.gd" id="3_kjkg0"]
 [ext_resource type="Script" uid="uid://cgg43hp6sdkjg" path="res://ai/tasks/stop.gd" id="4_23i14"]
 [ext_resource type="Script" uid="uid://dvqdspjyvkrhk" path="res://ai/tasks/turn.gd" id="5_upcww"]
-[ext_resource type="Script" uid="uid://bnwurrh27heug" path="res://ai/tasks/can_pickup_treat.gd" id="8_fqd8v"]
-[ext_resource type="Script" uid="uid://d362j87icoyii" path="res://ai/tasks/pickup_treat.gd" id="9_n6ogd"]
-[ext_resource type="Script" uid="uid://c0wtg76y1m04l" path="res://ai/tasks/can_see_treat.gd" id="10_eyybb"]
-[ext_resource type="Script" uid="uid://c1b1jau43xlmu" path="res://ai/tasks/face_detected_treat.gd" id="11_pvrqt"]
+[ext_resource type="Script" path="res://ai/tasks/can_pickup_treat.gd" id="8_fqd8v"]
+[ext_resource type="Script" path="res://ai/tasks/pickup_treat.gd" id="9_n6ogd"]
+[ext_resource type="Script" path="res://ai/tasks/can_see_treat.gd" id="10_eyybb"]
+[ext_resource type="Script" path="res://ai/tasks/face_detected_treat.gd" id="11_pvrqt"]
 
 [sub_resource type="BlackboardPlan" id="BlackboardPlan_73enu"]
 var/detection_var/name = &"detection_var"

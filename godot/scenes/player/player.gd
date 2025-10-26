@@ -5,6 +5,7 @@ extends CharacterBody2D
 @export var spawn_point: Node2D
 @export var fade_animator: AnimationPlayer
 @export var can_be_detected = false
+
 @export_group("Movement")
 
 @export_subgroup("Running")
@@ -103,7 +104,7 @@ func respawn():
 	if state in [State.HOLDING, State.DRAGGING]:
 		_throw_treat(Vector2.ZERO)
 	global_position = spawn_point.global_position
-	force_climb()
+	change_state(State.PERCHED)
 
 func _play_next_animation():
 	var next_anim = animation_queue.pop_front()
@@ -370,11 +371,6 @@ func _get_closest_interaction(cls: Variant) -> Variant:
 var _climbing_on: ClimbArea = null
 var _holding_treat_type: Treat.Type = Treat.Type.MYSTERY_BALL
 
-func force_climb():
-	_climbing_on = _get_closest_interaction(ClimbArea)
-	if _climbing_on == null: return
-	change_state(State.CLIMBING)
-
 func _check_climbing():
 	_climbing_on = _get_closest_interaction(ClimbArea)
 	if _climbing_on == null: return
@@ -426,6 +422,8 @@ func _check_interactions():
 			_check_throwing()
 
 func _climbing_rubber_band():
+	if _climbing_on == null:
+		return
 	var ideal_global_position = _climbing_on.snap_global(global_position)
 	var offs = ideal_global_position - global_position
 	if offs.is_zero_approx():
@@ -433,6 +431,8 @@ func _climbing_rubber_band():
 	velocity = offs.normalized() * max(offs.length() * climbing_rubber_band_factor, climbing_rubber_band_min_speed)
 
 func _climbing_snap_position():
+	if _climbing_on == null:
+		return
 	var ideal_global_position = _climbing_on.snap_global(global_position)
 	if abs(global_position.x - ideal_global_position.x) < climbing_max_snap_distance:
 		global_position.x = ideal_global_position.x
