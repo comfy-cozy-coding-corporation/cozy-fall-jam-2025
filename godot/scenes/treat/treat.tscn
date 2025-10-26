@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://dec3gt0k32jwg"]
+
+[ext_resource type="Texture2D" uid="uid://cdpcbtdkjnf2n" path="res://assets/mystery-ball.png" id="1_ynyod"]
+[ext_resource type="Script" uid="uid://us2f3tga4tb" path="res://scenes/treat/treat.gd" id="2_fjsvs"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fjsvs"]
+atlas = ExtResource("1_ynyod")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_aulxs"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fjsvs")
+}],
+"loop": false,
+"name": &"mystery-ball",
+"speed": 0.0
+}]
+
+[node name="Treat" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_aulxs")
+animation = &"mystery-ball"
+script = ExtResource("2_fjsvs")

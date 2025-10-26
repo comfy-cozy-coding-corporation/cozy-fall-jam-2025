@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://cqmchq01fchb6"]
+
+[ext_resource type="PackedScene" uid="uid://dec3gt0k32jwg" path="res://scenes/treat/treat.tscn" id="1_8tx1o"]
+[ext_resource type="Script" uid="uid://dwlvst3a7jouh" path="res://scenes/treat/dropped_treat.gd" id="1_ka30n"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kdd6k"]
+radius = 7.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ka30n"]
+
+[node name="DroppedTreat" type="RigidBody2D"]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_ka30n")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_kdd6k")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 128
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_ka30n")
+debug_color = Color(0.9592466, 3.85046e-07, 0.5253619, 0.41960785)
+
+[node name="Treat" parent="." instance=ExtResource("1_8tx1o")]

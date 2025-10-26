@@ -102,6 +102,10 @@ pause={
 
 locale/translations=PackedStringArray("res://i18n/translation.en.translation")
 
+[physics]
+
+2d/default_gravity=600.0
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
