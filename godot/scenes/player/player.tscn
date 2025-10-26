@@ -333,7 +333,7 @@ collision_mask = 25
 script = ExtResource("1_dovo2")
 
 [node name="Paws" type="Node2D" parent="."]
-position = Vector2(-3, -15)
+position = Vector2(-5.735, -8)
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -8)

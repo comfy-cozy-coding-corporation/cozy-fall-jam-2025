@@ -106,4 +106,4 @@ position = Vector2(257, -34)
 [node name="DroppedTreat" parent="." instance=ExtResource("12_2vs8u")]
 position = Vector2(12, -30)
 physics_material_override = SubResource("PhysicsMaterial_2vs8u")
-_type = 1
+_type = 2
