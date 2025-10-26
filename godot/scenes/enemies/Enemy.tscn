@@ -48,7 +48,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7cewq"]
-size = Vector2(169, 64)
+size = Vector2(175, 64)
 
 [sub_resource type="BlackboardPlan" id="BlackboardPlan_73enu"]
 
@@ -80,11 +80,11 @@ animation = &"angry"
 
 [node name="SightArea" type="Area2D" parent="body"]
 collision_layer = 0
-collision_mask = 2
+collision_mask = 34
 monitorable = false
 
 [node name="SightCollider" type="CollisionShape2D" parent="body/SightArea"]
-position = Vector2(43.5, 1)
+position = Vector2(41, 1)
 shape = SubResource("RectangleShape2D_7cewq")
 
 [node name="TreatHolder" type="Node2D" parent="body"]

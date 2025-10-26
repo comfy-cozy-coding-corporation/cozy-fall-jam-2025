@@ -48,20 +48,40 @@ func turn_around():
 	
 func can_see_player():
 	var colliders = $body/SightArea.get_overlapping_bodies()
+	
 	if len(colliders) == 0:
-		return false
+		return null
+		
 	var collider: Player
+	
 	for c in colliders:
 		if c is Player:
 			collider = c
 			break
+	
+	if not collider:
+		return null
+	print(collider)
+	if collider.hiding or not collider.can_be_detected:
+		return null
+	return collider
+	
+
+func can_see_treat():
+	var colliders = $body/SightArea.get_overlapping_bodies()
+	if len(colliders) == 0:
+		return null
+	var collider: DroppedTreat
+	for c in colliders:
+		if c is DroppedTreat:
+			collider = c
+			break
 			
 	if not collider:
-		return false
-		
-	if collider.hiding or not collider.can_be_detected:
-		return false
-	return true
+		return null
+
+	return collider
+	
 	
 func can_pickup_treat():
 	if has_treat: return false
@@ -72,17 +92,25 @@ func can_pickup_treat():
 			break
 	if not treat: return false
 	return treat
-
-func turn_toward_player():
-	if not can_see_player():
-		return
 	
-	var player: Node2D = $body/SightArea.get_overlapping_bodies()[0]
-	if player.global_position.x <= global_position.x:
+func turn_toward_node(node: Node2D):
+	if node.global_position.x <= global_position.x:
 		facing_direction = directions.LEFT
 	else:
 		facing_direction = directions.RIGHT
 
+func turn_toward_treat():
+	var treat: DroppedTreat = can_see_treat()
+	if not treat: return
+	turn_toward_node(treat)
+	
+func turn_toward_player():
+	print("cansee", can_see_player())
+	var player: Player = can_see_player()
+	if not player:
+		return
+	turn_toward_node(player)
+	
 func set_sprite_state(state):
 	$body/sprite.animation = state
 		

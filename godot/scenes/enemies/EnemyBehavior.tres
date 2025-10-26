@@ -1,4 +1,4 @@
-[gd_resource type="BehaviorTree" load_steps=67 format=3 uid="uid://csl3srkx36g8j"]
+[gd_resource type="BehaviorTree" load_steps=80 format=3 uid="uid://csl3srkx36g8j"]
 
 [ext_resource type="Script" uid="uid://estam0hqswbd" path="res://ai/tasks/can_see_player.gd" id="1_4u2yy"]
 [ext_resource type="Script" uid="uid://bkekkv47fvwtm" path="res://ai/tasks/set_enemy_anger.gd" id="1_bjilo"]
@@ -10,6 +10,8 @@
 [ext_resource type="Script" uid="uid://dvqdspjyvkrhk" path="res://ai/tasks/turn.gd" id="5_upcww"]
 [ext_resource type="Script" uid="uid://bnwurrh27heug" path="res://ai/tasks/can_pickup_treat.gd" id="8_fqd8v"]
 [ext_resource type="Script" uid="uid://d362j87icoyii" path="res://ai/tasks/pickup_treat.gd" id="9_n6ogd"]
+[ext_resource type="Script" uid="uid://c0wtg76y1m04l" path="res://ai/tasks/can_see_treat.gd" id="10_eyybb"]
+[ext_resource type="Script" uid="uid://c1b1jau43xlmu" path="res://ai/tasks/face_detected_treat.gd" id="11_pvrqt"]
 
 [sub_resource type="BlackboardPlan" id="BlackboardPlan_73enu"]
 var/detection_var/name = &"detection_var"
@@ -186,6 +188,41 @@ script = ExtResource("9_n6ogd")
 custom_name = "Pickup treat"
 children = [SubResource("BTCondition_eyybb"), SubResource("BTAction_pvrqt")]
 
+[sub_resource type="BTCondition" id="BTCondition_8b6tu"]
+script = ExtResource("8_fqd8v")
+
+[sub_resource type="BTCondition" id="BTCondition_upx3q"]
+script = ExtResource("10_eyybb")
+
+[sub_resource type="BTAction" id="BTAction_8b6tu"]
+script = ExtResource("4_23i14")
+
+[sub_resource type="BTWait" id="BTWait_dhgfn"]
+duration = 0.5
+
+[sub_resource type="BTCondition" id="BTCondition_pvrqt"]
+script = ExtResource("10_eyybb")
+
+[sub_resource type="BTCondition" id="BTCondition_dhgfn"]
+script = ExtResource("8_fqd8v")
+
+[sub_resource type="BTAction" id="BTAction_m0bx1"]
+script = ExtResource("11_pvrqt")
+
+[sub_resource type="BTAction" id="BTAction_uce2p"]
+script = ExtResource("3_kjkg0")
+speed = 20.0
+
+[sub_resource type="BTSequence" id="BTSequence_8b6tu"]
+children = [SubResource("BTCondition_pvrqt"), SubResource("BTCondition_dhgfn"), SubResource("BTAction_m0bx1"), SubResource("BTAction_uce2p")]
+
+[sub_resource type="BTRepeatUntilFailure" id="BTRepeatUntilFailure_dhgfn"]
+children = [SubResource("BTSequence_8b6tu")]
+
+[sub_resource type="BTSequence" id="BTSequence_0vfjn"]
+custom_name = "Chase treat"
+children = [SubResource("BTCondition_8b6tu"), SubResource("BTCondition_upx3q"), SubResource("BTAction_8b6tu"), SubResource("BTWait_dhgfn"), SubResource("BTRepeatUntilFailure_dhgfn")]
+
 [sub_resource type="BTAction" id="BTAction_0apxy"]
 script = ExtResource("4_23i14")
 
@@ -223,7 +260,7 @@ custom_name = "Idle patrol"
 children = [SubResource("BTSequence_kjkg0")]
 
 [sub_resource type="BTDynamicSelector" id="BTDynamicSelector_vtlqb"]
-children = [SubResource("BTSequence_bjilo"), SubResource("BTSequence_73enu"), SubResource("BTSequence_dhgfn"), SubResource("BTSequence_upcww"), SubResource("BTSequence_upx3q"), SubResource("BTSequence_tw3xv")]
+children = [SubResource("BTSequence_bjilo"), SubResource("BTSequence_73enu"), SubResource("BTSequence_dhgfn"), SubResource("BTSequence_upcww"), SubResource("BTSequence_upx3q"), SubResource("BTSequence_0vfjn"), SubResource("BTSequence_tw3xv")]
 
 [resource]
 blackboard_plan = SubResource("BlackboardPlan_73enu")
