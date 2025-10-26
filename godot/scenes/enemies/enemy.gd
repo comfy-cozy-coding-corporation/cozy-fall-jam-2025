@@ -1,5 +1,11 @@
+class_name Enemy
 extends CharacterBody2D
 
+const _scene = preload("res://scenes/enemies/Enemy.tscn")
+
+static func create() -> Enemy:
+	var enemy = _scene.instantiate()
+	return enemy
 
 enum directions {
 	RIGHT = 1,
@@ -18,7 +24,7 @@ func _ready() -> void:
 	$body/TreatHolder.add_child(treat)
 	
 	
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	$body.scale.x = facing_direction
 
 func _physics_process(delta: float) -> void:

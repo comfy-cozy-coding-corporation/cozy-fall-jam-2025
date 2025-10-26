@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://cqmchq01fchb6" path="res://scenes/treat/dropped_treat.tscn" id="12_2vs8u"]
 [ext_resource type="PackedScene" uid="uid://4y8l1aolp340" path="res://scenes/environment/basetree_scene.tscn" id="13_juwkt"]
 [ext_resource type="AudioStream" uid="uid://gshkegew3hm2" path="res://assets/void_estate.ogg" id="15_pxehq"]
+[ext_resource type="PackedScene" uid="uid://b300edjodmp4a" path="res://scenes/enemies/enemy_spawner.tscn" id="15_pxehq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pxehq"]
 size = Vector2(1853, 0)
@@ -146,3 +147,4 @@ _type = 2
 stream = ExtResource("15_pxehq")
 volume_db = -10.0
 autoplay = true
+[node name="EnemySpawner" parent="." instance=ExtResource("15_pxehq")]
