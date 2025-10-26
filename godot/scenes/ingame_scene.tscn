@@ -1,34 +1,34 @@
-[gd_scene load_steps=23 format=3 uid="uid://cik30de5gaaah"]
+[gd_scene load_steps=19 format=3 uid="uid://cik30de5gaaah"]
 
 [ext_resource type="Script" uid="uid://ovjegpk30m4h" path="res://scenes/ingame_scene.gd" id="1_objyc"]
 [ext_resource type="PackedScene" uid="uid://bkk87o2ooo6at" path="res://ui/overlays/fade_overlay.tscn" id="1_y6ebv"]
+[ext_resource type="Texture2D" uid="uid://3ra1cte85ypi" path="res://assets/background.png" id="2_ilpo5"]
 [ext_resource type="PackedScene" uid="uid://jyv4g54adkmo" path="res://ui/overlays/pause_overlay.tscn" id="3_8o178"]
 [ext_resource type="PackedScene" uid="uid://bum8grp8k142r" path="res://scenes/player/player.tscn" id="4_7v5ay"]
 [ext_resource type="PackedScene" uid="uid://bg2va567u5nln" path="res://scenes/score/score_display.tscn" id="5_ilpo5"]
-[ext_resource type="Texture2D" uid="uid://ypb5vlxu6sj7" path="res://assets/background_placeholder.png" id="6_gadrd"]
 [ext_resource type="Script" uid="uid://dpcxbaxymuk5c" path="res://scenes/environment/environment_manager.gd" id="7_5jhce"]
 [ext_resource type="PackedScene" uid="uid://ck5qry0ad6xi5" path="res://scenes/environment/tree_scene.tscn" id="8_1sh3m"]
 [ext_resource type="PackedScene" uid="uid://cwjf8k7g6u00e" path="res://scenes/environment/bush_scene.tscn" id="8_vus8m"]
 [ext_resource type="PackedScene" uid="uid://ca6het3qxni51" path="res://scenes/environment/parkbench_scene.tscn" id="9_1sh3m"]
 [ext_resource type="PackedScene" uid="uid://dt26ro2tlmu4k" path="res://scenes/camera.tscn" id="10_etwux"]
-[ext_resource type="PackedScene" uid="uid://dtmh6wqihppb3" path="res://scenes/enemies/Enemy.tscn" id="11_iid22"]
-[ext_resource type="PackedScene" uid="uid://cqmchq01fchb6" path="res://scenes/treat/dropped_treat.tscn" id="12_2vs8u"]
 [ext_resource type="PackedScene" uid="uid://4y8l1aolp340" path="res://scenes/environment/basetree_scene.tscn" id="13_juwkt"]
+[ext_resource type="AudioStream" uid="uid://gshkegew3hm2" path="res://assets/void_estate.ogg" id="15_pxehq"]
+[ext_resource type="PackedScene" uid="uid://b300edjodmp4a" path="res://scenes/enemies/enemy_spawner.tscn" id="15_pxehq"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_1sh3m"]
-size = Vector2(914, 10)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pxehq"]
+size = Vector2(1853, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vus8m"]
-size = Vector2(914, 37)
+size = Vector2(1926, 11)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_etwux"]
-size = Vector2(914, 37)
+size = Vector2(1652, 6)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ilpo5"]
+size = Vector2(9.5, 247)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5jhce"]
-size = Vector2(915, 86)
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2vs8u"]
-bounce = 0.6
+size = Vector2(2000, 18)
 
 [sub_resource type="Animation" id="Animation_pxehq"]
 length = 0.001
@@ -69,11 +69,11 @@ _data = {
 [node name="IngameScene" type="Node2D"]
 script = ExtResource("1_objyc")
 
-[node name="BackgroundPlaceholder" type="Sprite2D" parent="."]
+[node name="Background" type="Sprite2D" parent="."]
 texture_filter = 2
-position = Vector2(-0.99999994, -75)
-scale = Vector2(0.13064511, 0.13064516)
-texture = ExtResource("6_gadrd")
+position = Vector2(0, -104)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_ilpo5")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -106,55 +106,65 @@ fade_animator = NodePath("../Transition/AnimationPlayer")
 [node name="EnvironmentManager" type="Node2D" parent="." node_paths=PackedStringArray("bush_pos_area", "bush_nodes_container", "tree_pos_area", "tree_nodes_container", "bench_pos_area", "bench_nodes_container")]
 script = ExtResource("7_5jhce")
 bush_scene = ExtResource("8_vus8m")
+min_bushes = 7
+max_bushes = 10
 bush_pos_area = NodePath("BushGenerationArea/CollisionShape2D")
 bush_nodes_container = NodePath("../Bushes")
 tree_scene = ExtResource("8_1sh3m")
+min_trees = 5
+max_trees = 7
 tree_pos_area = NodePath("TreeGenerationArea/CollisionShape2D")
 tree_min_distance = 100
 tree_nodes_container = NodePath("../Trees")
 bench_scene = ExtResource("9_1sh3m")
+min_benches = 4
+max_benches = 8
 bench_pos_area = NodePath("BenchGenerationArea/CollisionShape2D")
 bench_nodes_container = NodePath("../Benches")
 
 [node name="BenchGenerationArea" type="Area2D" parent="EnvironmentManager"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnvironmentManager/BenchGenerationArea"]
-position = Vector2(0, 25)
-shape = SubResource("RectangleShape2D_1sh3m")
+position = Vector2(-18.5, 2)
+shape = SubResource("RectangleShape2D_pxehq")
 
 [node name="BushGenerationArea" type="Area2D" parent="EnvironmentManager"]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnvironmentManager/BushGenerationArea"]
-position = Vector2(0, -19)
+position = Vector2(-14, -3.5)
 shape = SubResource("RectangleShape2D_vus8m")
 
 [node name="TreeGenerationArea" type="Area2D" parent="EnvironmentManager"]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnvironmentManager/TreeGenerationArea"]
-position = Vector2(0, -19)
+position = Vector2(7, -1)
 shape = SubResource("RectangleShape2D_etwux")
 
 [node name="Bushes" type="Node2D" parent="."]
 
+[node name="LeftSide" type="StaticBody2D" parent="."]
+position = Vector2(-1011, -1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftSide"]
+position = Vector2(15.75, -102.5)
+shape = SubResource("RectangleShape2D_ilpo5")
+
+[node name="RightSide" type="StaticBody2D" parent="."]
+position = Vector2(999, -1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightSide"]
+position = Vector2(-4.25, -102.5)
+shape = SubResource("RectangleShape2D_ilpo5")
+
 [node name="Ground" type="StaticBody2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
-position = Vector2(0, 43)
+position = Vector2(0, 11)
 shape = SubResource("RectangleShape2D_5jhce")
 
 [node name="Camera" parent="." node_paths=PackedStringArray("target") instance=ExtResource("10_etwux")]
-position = Vector2(0, -80)
+position = Vector2(0, -100)
 target = NodePath("../Player")
-
-[node name="Enemy" parent="." instance=ExtResource("11_iid22")]
-position = Vector2(257, -34)
-
-[node name="DroppedTreat" parent="." instance=ExtResource("12_2vs8u")]
-position = Vector2(12, -30)
-physics_material_override = SubResource("PhysicsMaterial_2vs8u")
-_type = 2
 
 [node name="ThrownTreats" type="Node" parent="."]
 
@@ -176,3 +186,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("15_pxehq")
+volume_db = -10.0
+autoplay = true
+[node name="EnemySpawner" parent="." instance=ExtResource("15_pxehq")]

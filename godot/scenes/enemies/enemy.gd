@@ -1,5 +1,11 @@
+class_name Enemy
 extends CharacterBody2D
 
+const _scene = preload("res://scenes/enemies/Enemy.tscn")
+
+static func create() -> Enemy:
+	var enemy = _scene.instantiate()
+	return enemy
 
 enum directions {
 	RIGHT = 1,
@@ -19,7 +25,7 @@ func _ready() -> void:
 	$body/TreatHolder.add_child(treat)
 	has_treat = true
 	
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	$body.scale.x = facing_direction
 	if $body/TreatHolder.get_child_count() == 0:
 		has_treat = false
@@ -86,7 +92,12 @@ func can_capture_player():
 	if len(colliders) == 0:
 		return false
 	
-	var player: Player = colliders[0]
+	var player: Player
+	for collider in colliders:
+		if collider is Player:
+			player = collider
+			break
+	if not player: return false
 
 	if not player.hiding:
 		return true

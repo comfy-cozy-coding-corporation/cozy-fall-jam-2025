@@ -1,10 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://b3xkd7icuna25"]
+[gd_scene load_steps=3 format=3 uid="uid://b3xkd7icuna25"]
 
 [ext_resource type="Script" uid="uid://cgwjfjwijhouv" path="res://scenes/treat/treat_pile.gd" id="1_puf1h"]
+[ext_resource type="AudioStream" uid="uid://lql0jd1vd7by" path="res://assets/score.wav" id="2_jyta5"]
 
 [node name="TreatPile" type="Area2D"]
 collision_layer = 0
 collision_mask = 32
 script = ExtResource("1_puf1h")
+
+[node name="sfx_score" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_jyta5")
+volume_db = -3.0
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
