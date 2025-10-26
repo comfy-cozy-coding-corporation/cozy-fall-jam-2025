@@ -11,16 +11,20 @@ script = ExtResource("1_3764u")
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="CenterContainer" type="CenterContainer" parent="UI"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 407.0
-offset_top = 250.0
-offset_right = -225.0
-offset_bottom = -231.0
+anchors_preset = -1
+anchor_left = 0.20390625
+anchor_top = 0.31388888
+anchor_right = 0.55921876
+anchor_bottom = 0.5372222
+offset_top = 1.5258789e-05
+offset_right = 303.19995
+offset_bottom = 107.20001
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.6, 0.6)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+metadata/_edit_use_anchors_ = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/CenterContainer"]
 layout_mode = 2
