@@ -128,7 +128,7 @@ position = Vector2(0, 11)
 shape = SubResource("RectangleShape2D_5jhce")
 
 [node name="Camera" parent="." node_paths=PackedStringArray("target") instance=ExtResource("10_etwux")]
-position = Vector2(0, -80)
+position = Vector2(0, -100)
 target = NodePath("../Player")
 
 [node name="Enemy" parent="." instance=ExtResource("11_iid22")]

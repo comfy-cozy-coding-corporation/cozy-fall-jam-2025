@@ -6,6 +6,7 @@ extends Camera2D
 @export var spring_constant = 0.4
 @export var velocity_compensation: float = 0.11
 @export var damping_factor = 8.0
+@export var max_panning_distance = 780
 
 var x_velocity = 0
 
@@ -13,7 +14,7 @@ func _get_ideal_position() -> float:
 	var direction = target.get_looking_direction()
 	if direction == 0:
 		return self.global_position.x
-	return target.global_position.x + direction * lookahead_offset
+	return clamp(target.global_position.x + direction * lookahead_offset, -max_panning_distance, max_panning_distance)
 
 func _spring_transform(x: float):
 	return sign(x) * (pow(x + 1, 2) - 1) / 2
@@ -35,4 +36,4 @@ func _process(delta: float) -> void:
 	var ideal_pos = _get_ideal_position()
 	var acc = _get_acceleration(ideal_pos)
 	x_velocity += acc * delta
-	self.global_position.x += x_velocity * delta
+	self.global_position.x = clamp(self.global_position.x + x_velocity * delta, -max_panning_distance, max_panning_distance)
