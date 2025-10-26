@@ -52,6 +52,16 @@ value = SubResource("BBVariant_upcww")
 custom_name = "Attacking"
 children = [SubResource("BTCheckVar_upcww"), SubResource("BTCondition_upcww"), SubResource("BTWait_upcww"), SubResource("BTAction_n6ogd"), SubResource("BTSetVar_fqd8v")]
 
+[sub_resource type="BTCondition" id="BTCondition_eyybb"]
+script = ExtResource("8_fqd8v")
+
+[sub_resource type="BTAction" id="BTAction_pvrqt"]
+script = ExtResource("9_n6ogd")
+
+[sub_resource type="BTSequence" id="BTSequence_upx3q"]
+custom_name = "Pickup treat"
+children = [SubResource("BTCondition_eyybb"), SubResource("BTAction_pvrqt")]
+
 [sub_resource type="BTAction" id="BTAction_kjkg0"]
 script = ExtResource("1_bjilo")
 
@@ -178,16 +188,6 @@ duration = 0.3
 custom_name = "Reset detection"
 children = [SubResource("BTInvert_bjilo"), SubResource("BTCheckVar_bjilo"), SubResource("BTAction_4u2yy"), SubResource("BTSetVar_n6ogd"), SubResource("BTWait_eyybb")]
 
-[sub_resource type="BTCondition" id="BTCondition_eyybb"]
-script = ExtResource("8_fqd8v")
-
-[sub_resource type="BTAction" id="BTAction_pvrqt"]
-script = ExtResource("9_n6ogd")
-
-[sub_resource type="BTSequence" id="BTSequence_upx3q"]
-custom_name = "Pickup treat"
-children = [SubResource("BTCondition_eyybb"), SubResource("BTAction_pvrqt")]
-
 [sub_resource type="BTCondition" id="BTCondition_8b6tu"]
 script = ExtResource("8_fqd8v")
 
@@ -260,7 +260,7 @@ custom_name = "Idle patrol"
 children = [SubResource("BTSequence_kjkg0")]
 
 [sub_resource type="BTDynamicSelector" id="BTDynamicSelector_vtlqb"]
-children = [SubResource("BTSequence_bjilo"), SubResource("BTSequence_73enu"), SubResource("BTSequence_dhgfn"), SubResource("BTSequence_upcww"), SubResource("BTSequence_upx3q"), SubResource("BTSequence_0vfjn"), SubResource("BTSequence_tw3xv")]
+children = [SubResource("BTSequence_bjilo"), SubResource("BTSequence_upx3q"), SubResource("BTSequence_73enu"), SubResource("BTSequence_dhgfn"), SubResource("BTSequence_upcww"), SubResource("BTSequence_0vfjn"), SubResource("BTSequence_tw3xv")]
 
 [resource]
 blackboard_plan = SubResource("BlackboardPlan_73enu")
