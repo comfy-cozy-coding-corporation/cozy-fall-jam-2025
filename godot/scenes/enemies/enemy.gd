@@ -10,14 +10,14 @@ enum directions {
 @export var base_speed = 10.0
 @export var chase_speed_mult = 1.5
 @export var facing_direction = directions.RIGHT
-
+var treat: Treat = null
 var detection_progress = 0.0
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	treat = Treat.create(randi() % len(Treat.Type))
+	$body/TreatHolder.add_child(treat)
 	
 	
-
 func _process(delta: float) -> void:
 	$body.scale.x = facing_direction
 

@@ -76,6 +76,9 @@ monitorable = false
 position = Vector2(43.5, 1)
 shape = SubResource("RectangleShape2D_7cewq")
 
+[node name="TreatHolder" type="Node2D" parent="body"]
+position = Vector2(18, 0)
+
 [node name="BTPlayer" type="BTPlayer" parent="."]
 behavior_tree = ExtResource("3_73enu")
 blackboard_plan = SubResource("BlackboardPlan_73enu")

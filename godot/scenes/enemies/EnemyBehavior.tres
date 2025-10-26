@@ -1,4 +1,4 @@
-[gd_resource type="BehaviorTree" load_steps=53 format=3 uid="uid://csl3srkx36g8j"]
+[gd_resource type="BehaviorTree" load_steps=52 format=3 uid="uid://csl3srkx36g8j"]
 
 [ext_resource type="Script" uid="uid://estam0hqswbd" path="res://ai/tasks/can_see_player.gd" id="1_4u2yy"]
 [ext_resource type="Script" uid="uid://bkekkv47fvwtm" path="res://ai/tasks/set_enemy_anger.gd" id="1_bjilo"]
@@ -78,7 +78,7 @@ children = [SubResource("BTAction_kjkg0"), SubResource("BTCheckVar_23i14"), SubR
 script = ExtResource("1_4u2yy")
 
 [sub_resource type="BTWait" id="BTWait_n6ogd"]
-duration = 0.5
+duration = 0.3
 
 [sub_resource type="BBVariant" id="BBVariant_eyybb"]
 type = 3
@@ -160,20 +160,17 @@ script = ExtResource("4_23i14")
 [sub_resource type="BTSequence" id="BTSequence_7cewq"]
 children = [SubResource("BTAction_7iym1"), SubResource("BTRandomWait_vtlqb"), SubResource("BTAction_tboc4")]
 
-[sub_resource type="BTProbability" id="BTProbability_vtlqb"]
-children = [SubResource("BTSequence_7cewq")]
-
 [sub_resource type="BTAction" id="BTAction_24b6r"]
 script = ExtResource("5_upcww")
 
 [sub_resource type="BTSequence" id="BTSequence_n4qy4"]
 children = [SubResource("BTAction_24b6r")]
 
-[sub_resource type="BTSelector" id="BTSelector_0apxy"]
-children = [SubResource("BTProbability_vtlqb"), SubResource("BTSequence_n4qy4")]
+[sub_resource type="BTProbabilitySelector" id="BTProbabilitySelector_bjilo"]
+children = [SubResource("BTSequence_7cewq"), SubResource("BTSequence_n4qy4")]
 
 [sub_resource type="BTSequence" id="BTSequence_kjkg0"]
-children = [SubResource("BTAction_0apxy"), SubResource("BTWait_7iym1"), SubResource("BTSelector_0apxy")]
+children = [SubResource("BTAction_0apxy"), SubResource("BTWait_7iym1"), SubResource("BTProbabilitySelector_bjilo")]
 
 [sub_resource type="BTSequence" id="BTSequence_tw3xv"]
 custom_name = "Idle patrol"
