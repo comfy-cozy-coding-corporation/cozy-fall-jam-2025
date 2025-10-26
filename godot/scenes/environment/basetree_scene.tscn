@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bapnfjsr5l254"]
+
+[ext_resource type="Texture2D" uid="uid://de0fq5s7og7yp" path="res://assets/base_tree.png" id="1_jf1pr"]
+[ext_resource type="PackedScene" uid="uid://cs3l2nsfdeam7" path="res://scenes/player/climb_area.tscn" id="2_6us72"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tu66x"]
+size = Vector2(45, 149)
+
+[node name="BaseTree" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_jf1pr")
+offset = Vector2(0, -80)
+
+[node name="ClimbArea" parent="." instance=ExtResource("2_6us72")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClimbArea"]
+position = Vector2(-3.5, -74.5)
+shape = SubResource("RectangleShape2D_tu66x")
